@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { addToCart } from "@/lib/cart";
+import { logEvent as logEventHelper } from "@/lib/events";
 import { formatMRU } from "@/lib/format";
 
 export type FeedCardData = {
@@ -13,6 +14,7 @@ export type FeedCardData = {
   name: string;
   price_mru: number;
   storeName: string;
+  merchantId: string;
   heroImageUrl: string | null;
   videoEmbedUrl: string | null;
 };
@@ -47,19 +49,11 @@ function FeedCard({ product }: { product: FeedCardData }) {
   const [saved, setSaved] = useState(false);
   const [adding, setAdding] = useState(false);
 
-  async function logEvent(eventType: string) {
+  async function logEvent(eventType: "like" | "unlike" | "save" | "unsave" | "add_to_cart") {
     const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    await supabase.from("events").insert({
-      user_id: user?.id ?? null,
-      event_type: eventType,
-      product_id: product.id,
-      session_id:
-        typeof window !== "undefined"
-          ? (sessionStorage.getItem("session_id") ?? crypto.randomUUID())
-          : crypto.randomUUID(),
+    await logEventHelper(supabase, eventType, {
+      productId: product.id,
+      merchantId: product.merchantId,
     });
   }
 

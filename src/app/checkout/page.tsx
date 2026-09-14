@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { getCartItems } from "@/lib/cart";
+import { getCartItems, type CartItem } from "@/lib/cart";
+import { logEvent } from "@/lib/events";
 import { formatMRU } from "@/lib/format";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const [subtotal, setSubtotal] = useState<number | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [productMerchants, setProductMerchants] = useState<Record<string, string>>({});
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("Nouakchott");
   const [phone, setPhone] = useState("");
@@ -33,13 +36,17 @@ export default function CheckoutPage() {
       const productIds = items.map((i) => i.product_id);
       const { data: products } = await supabase
         .from("products")
-        .select("id, price_mru")
+        .select("id, price_mru, merchant_id")
         .in("id", productIds);
       const total = items.reduce((sum, item) => {
         const p = products?.find((pr) => pr.id === item.product_id);
         return sum + (p?.price_mru ?? 0) * item.quantity;
       }, 0);
       setSubtotal(total);
+      setCartItems(items);
+      setProductMerchants(
+        Object.fromEntries((products ?? []).map((p) => [p.id, p.merchant_id]))
+      );
     })();
   }, [router]);
 
@@ -60,6 +67,18 @@ export default function CheckoutPage() {
       setErrorMessage(error.message);
       return;
     }
+
+    // Log a purchase event per line item — this is what completes the
+    // views -> cart -> purchase funnel merchants see in their analytics.
+    await Promise.all(
+      cartItems.map((item) =>
+        logEvent(supabase, "purchase", {
+          productId: item.product_id,
+          merchantId: productMerchants[item.product_id],
+          metadata: { quantity: item.quantity },
+        })
+      )
+    );
 
     const firstOrderId = data?.[0]?.order_id;
     router.push(firstOrderId ? `/orders/${firstOrderId}?placed=1` : "/orders");

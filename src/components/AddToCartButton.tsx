@@ -4,8 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { addToCart } from "@/lib/cart";
+import { logEvent } from "@/lib/events";
 
-export function AddToCartButton({ productId }: { productId: string }) {
+export function AddToCartButton({
+  productId,
+  merchantId,
+}: {
+  productId: string;
+  merchantId?: string;
+}) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [status, setStatus] = useState<"idle" | "adding" | "added">("idle");
@@ -23,6 +30,7 @@ export function AddToCartButton({ productId }: { productId: string }) {
     }
 
     await addToCart(supabase, user.id, productId, null, quantity);
+    await logEvent(supabase, "add_to_cart", { productId, merchantId, metadata: { quantity } });
     setStatus("added");
     router.refresh();
     setTimeout(() => setStatus("idle"), 1500);

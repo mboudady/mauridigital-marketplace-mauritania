@@ -6,6 +6,7 @@ import { AddToCartButton } from "@/components/AddToCartButton";
 import { ReportButton } from "@/components/ReportButton";
 import { SaveButton } from "@/components/SaveButton";
 import { MessageSellerButton } from "@/components/MessageSellerButton";
+import { ViewTracker } from "@/components/ViewTracker";
 import { formatMRU } from "@/lib/format";
 
 export default async function ProductPage({
@@ -54,6 +55,7 @@ export default async function ProductPage({
 
   return (
     <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+      <ViewTracker productId={product.id} merchantId={product.merchant_id} />
       <div className="safe-top mx-auto grid max-w-4xl gap-8 px-6 pt-6 sm:grid-cols-2 sm:px-10">
         <div>
           <div className="relative aspect-square w-full overflow-hidden rounded bg-indigo-800">
@@ -139,7 +141,7 @@ export default async function ProductPage({
 
           <div className="mt-6 flex items-center gap-3">
             <div className="flex-1">
-              <AddToCartButton productId={product.id} />
+              <AddToCartButton productId={product.id} merchantId={product.merchant_id} />
             </div>
           </div>
 
