@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { OrderActions } from "@/components/OrderActions";
+import { ReviewForm } from "@/components/ReviewForm";
 import { formatMRU } from "@/lib/format";
 
 const STEPS = ["pending", "confirmed", "shipped", "delivered", "completed"];
@@ -25,7 +26,7 @@ export default async function OrderDetailPage({
   const { data: order } = await supabase
     .from("orders")
     .select(
-      "id, order_number, status, total_mru, delivery_address, delivery_city, delivery_phone, created_at, merchants(store_name), order_items(quantity, price_per_unit_mru, total_mru, products(name))"
+      "id, order_number, status, total_mru, merchant_id, delivery_address, delivery_city, delivery_phone, created_at, merchants(store_name), order_items(quantity, price_per_unit_mru, total_mru, product_id, products(name))"
     )
     .eq("id", id)
     .eq("customer_id", user.id)
@@ -34,6 +35,15 @@ export default async function OrderDetailPage({
   if (!order) notFound();
 
   const currentStepIndex = STEPS.indexOf(order.status);
+
+  let reviewedProductIds: string[] = [];
+  if (order.status === "completed") {
+    const { data: existingReviews } = await supabase
+      .from("reviews")
+      .select("product_id")
+      .eq("order_id", order.id);
+    reviewedProductIds = (existingReviews ?? []).map((r) => r.product_id);
+  }
 
   return (
     <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
@@ -104,6 +114,26 @@ export default async function OrderDetailPage({
         </div>
 
         <OrderActions orderId={order.id} status={order.status} />
+
+        {order.status === "completed" && (
+          <div className="mt-6 space-y-4">
+            {(order.order_items ?? [])
+              .filter((item) => !reviewedProductIds.includes(item.product_id))
+              .map((item) => (
+                <div key={item.product_id}>
+                  <p className="mb-2 text-sm text-sand-300">
+                    Review{" "}
+                    {(item.products as unknown as { name: string } | null)?.name}
+                  </p>
+                  <ReviewForm
+                    orderId={order.id}
+                    productId={item.product_id}
+                    merchantId={order.merchant_id}
+                  />
+                </div>
+              ))}
+          </div>
+        )}
 
         <Link
           href="/orders"

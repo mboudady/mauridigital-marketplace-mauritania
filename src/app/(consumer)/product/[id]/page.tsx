@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ReportButton } from "@/components/ReportButton";
+import { SaveButton } from "@/components/SaveButton";
+import { MessageSellerButton } from "@/components/MessageSellerButton";
 import { formatMRU } from "@/lib/format";
 
 export default async function ProductPage({
@@ -23,6 +25,14 @@ export default async function ProductPage({
     .maybeSingle();
 
   if (!product) notFound();
+
+  const { data: reviews } = await supabase
+    .from("reviews")
+    .select("id, rating_product, text, created_at, verified_purchase")
+    .eq("product_id", product.id)
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(20);
 
   const allMedia = (product.product_media ?? []) as Array<{
     url: string;
@@ -103,7 +113,9 @@ export default async function ProductPage({
 
           {merchant && (
             <div className="mt-4 flex items-center gap-2 border-y border-indigo-700 py-3 text-sm">
-              <span className="text-sand-200">{merchant.store_name}</span>
+              <Link href={`/store/${product.merchant_id}`} className="text-sand-200 hover:underline">
+                {merchant.store_name}
+              </Link>
               {merchant.verification_status === "verified" && (
                 <span className="rounded bg-indigo-700 px-2 py-0.5 text-xs text-sand-300">
                   Verified
@@ -125,8 +137,15 @@ export default async function ProductPage({
             </p>
           )}
 
-          <div className="mt-6">
-            <AddToCartButton productId={product.id} />
+          <div className="mt-6 flex items-center gap-3">
+            <div className="flex-1">
+              <AddToCartButton productId={product.id} />
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center gap-4">
+            <SaveButton productId={product.id} />
+            <MessageSellerButton merchantId={product.merchant_id} productId={product.id} />
           </div>
 
           <Link
@@ -139,6 +158,30 @@ export default async function ProductPage({
           <div className="mt-4">
             <ReportButton contentType="product" contentId={product.id} />
           </div>
+
+          {reviews && reviews.length > 0 && (
+            <div className="mt-8 border-t border-indigo-700 pt-4">
+              <p className="text-sm font-medium text-sand-100">Reviews</p>
+              <ul className="mt-3 space-y-3">
+                {reviews.map((r) => (
+                  <li key={r.id} className="text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-clay-400">
+                        {"★".repeat(r.rating_product)}
+                        {"☆".repeat(5 - r.rating_product)}
+                      </span>
+                      {r.verified_purchase && (
+                        <span className="text-[10px] text-sand-500">
+                          Verified purchase
+                        </span>
+                      )}
+                    </div>
+                    {r.text && <p className="mt-1 text-sand-300">{r.text}</p>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </main>

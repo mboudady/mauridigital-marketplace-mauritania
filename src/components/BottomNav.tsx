@@ -54,16 +54,32 @@ function OrdersIcon({ active }: { active: boolean }) {
   );
 }
 
+function InboxIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M4 12l2.5-7A1 1 0 017.4 4.5h9.2a1 1 0 01.9.6L20 12v6a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 18v-6z"
+        stroke="currentColor"
+        strokeWidth={active ? 2.5 : 2}
+        strokeLinejoin="round"
+      />
+      <path d="M4 12h5l1.5 2.5h3L15 12h5" stroke="currentColor" strokeWidth={active ? 2.5 : 2} strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 const TABS = [
   { href: "/feed", label: "Home", Icon: HomeIcon },
   { href: "/search", label: "Discover", Icon: SearchIcon },
   { href: "/cart", label: "Cart", Icon: CartIcon },
+  { href: "/notifications", label: "Inbox", Icon: InboxIcon },
   { href: "/orders", label: "Orders", Icon: OrdersIcon },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
   const [cartCount, setCartCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -74,11 +90,22 @@ export function BottomNav() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        if (active) setCartCount(0);
+        if (active) {
+          setCartCount(0);
+          setUnreadCount(0);
+        }
         return;
       }
       const count = await getCartCount(supabase, user.id);
-      if (active) setCartCount(count);
+      const { count: notifCount } = await supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("read", false);
+      if (active) {
+        setCartCount(count);
+        setUnreadCount(notifCount ?? 0);
+      }
     }
 
     refresh();
@@ -94,6 +121,8 @@ export function BottomNav() {
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-2">
         {TABS.map(({ href, label, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
+          const badge =
+            href === "/cart" ? cartCount : href === "/notifications" ? unreadCount : 0;
           return (
             <Link
               key={href}
@@ -104,9 +133,9 @@ export function BottomNav() {
             >
               <Icon active={active} />
               <span className="text-[10px]">{label}</span>
-              {href === "/cart" && cartCount > 0 && (
+              {badge > 0 && (
                 <span className="absolute -right-1 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-clay-500 px-1 text-[9px] text-sand-50">
-                  {cartCount}
+                  {badge}
                 </span>
               )}
             </Link>

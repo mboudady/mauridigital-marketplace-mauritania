@@ -69,7 +69,25 @@ function FeedCard({ product }: { product: FeedCardData }) {
   }
 
   async function toggleSave() {
-    setSaved((v) => !v);
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (saved) {
+      await supabase
+        .from("saves")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("product_id", product.id);
+      setSaved(false);
+    } else {
+      await supabase.from("saves").insert({ user_id: user.id, product_id: product.id });
+      setSaved(true);
+    }
     await logEvent(saved ? "unsave" : "save");
   }
 
