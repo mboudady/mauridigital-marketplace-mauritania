@@ -48,7 +48,10 @@ export default async function AdminDashboardPage() {
       <div className="mx-auto max-w-4xl">
         <h1 className="font-display text-3xl">Merchants</h1>
         <p className="mt-1 text-sm text-sand-500">
-          {merchants?.length ?? 0} total
+          {merchants?.length ?? 0} total ·{" "}
+          <a href="/admin/moderation" className="text-indigo-600 underline">
+            Moderation queue
+          </a>
         </p>
 
         <table className="mt-8 w-full border-collapse text-left text-sm">

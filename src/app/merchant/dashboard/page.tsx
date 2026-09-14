@@ -62,10 +62,16 @@ export default async function MerchantDashboardPage() {
 
         <div className="mt-10 flex gap-3">
           <a
-            href="/merchant/products"
+            href="/merchant/orders"
             className="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-sand-50 hover:bg-indigo-500"
           >
-            Manage products
+            Manage orders
+          </a>
+          <a
+            href="/merchant/products"
+            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+          >
+            Products
           </a>
           <a
             href="/merchant/products/new"
@@ -76,9 +82,8 @@ export default async function MerchantDashboardPage() {
         </div>
 
         <div className="mt-6 rounded border border-dashed border-sand-300 bg-white p-6 text-center text-sm text-sand-500">
-          Order management and analytics dashboards land later in the
-          roadmap. Orders can already be placed by customers and tracked
-          from the admin panel.
+          Analytics dashboards and affiliate management land later in the
+          roadmap.
         </div>
       </div>
     </main>

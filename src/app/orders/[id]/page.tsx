@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ConsumerNav } from "@/components/ConsumerNav";
+import { OrderActions } from "@/components/OrderActions";
 import { formatMRU } from "@/lib/format";
 import { getCartCount } from "@/lib/cart";
 
@@ -107,6 +108,8 @@ export default async function OrderDetailPage({
           <p>{order.delivery_city}</p>
           <p>{order.delivery_phone}</p>
         </div>
+
+        <OrderActions orderId={order.id} status={order.status} />
 
         <Link
           href="/orders"

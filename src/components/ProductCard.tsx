@@ -9,6 +9,7 @@ export type ProductCardData = {
   category: string;
   heroImageUrl: string | null;
   storeName: string;
+  hasVideo?: boolean;
 };
 
 export function ProductCard({ product }: { product: ProductCardData }) {
@@ -30,6 +31,13 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           <div className="flex h-full items-center justify-center text-xs text-sand-500">
             No image
           </div>
+        )}
+        {product.hasVideo && (
+          <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-900/80 text-sand-50">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+              <path d="M1 0.5L9 5L1 9.5V0.5Z" />
+            </svg>
+          </span>
         )}
       </div>
       <div className="p-3">

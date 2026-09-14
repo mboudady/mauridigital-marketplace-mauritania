@@ -954,6 +954,7 @@ export type Database = {
           status: string
           subtotal_mru: number
           total_mru: number
+          tracking_note: string | null
           updated_at: string
         }
         Insert: {
@@ -975,6 +976,7 @@ export type Database = {
           status?: string
           subtotal_mru: number
           total_mru: number
+          tracking_note?: string | null
           updated_at?: string
         }
         Update: {
@@ -996,6 +998,7 @@ export type Database = {
           status?: string
           subtotal_mru?: number
           total_mru?: number
+          tracking_note?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1117,7 +1120,6 @@ export type Database = {
       }
       product_media: {
         Row: {
-          cloudflare_video_id: string | null
           created_at: string
           display_order: number
           id: string
@@ -1125,9 +1127,10 @@ export type Database = {
           product_id: string
           type: string
           url: string
+          video_external_id: string | null
+          video_provider: string | null
         }
         Insert: {
-          cloudflare_video_id?: string | null
           created_at?: string
           display_order?: number
           id?: string
@@ -1135,9 +1138,10 @@ export type Database = {
           product_id: string
           type: string
           url: string
+          video_external_id?: string | null
+          video_provider?: string | null
         }
         Update: {
-          cloudflare_video_id?: string | null
           created_at?: string
           display_order?: number
           id?: string
@@ -1145,6 +1149,8 @@ export type Database = {
           product_id?: string
           type?: string
           url?: string
+          video_external_id?: string | null
+          video_provider?: string | null
         }
         Relationships: [
           {
@@ -1283,6 +1289,7 @@ export type Database = {
           merchant_response_at: string | null
           notes: string | null
           order_id: string
+          order_status_before: string | null
           reason: string
           refund_method: string | null
           requested_by_id: string
@@ -1301,6 +1308,7 @@ export type Database = {
           merchant_response_at?: string | null
           notes?: string | null
           order_id: string
+          order_status_before?: string | null
           reason: string
           refund_method?: string | null
           requested_by_id: string
@@ -1319,6 +1327,7 @@ export type Database = {
           merchant_response_at?: string | null
           notes?: string | null
           order_id?: string
+          order_status_before?: string | null
           reason?: string
           refund_method?: string | null
           requested_by_id?: string
@@ -1702,7 +1711,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_resolve_report: {
+        Args: {
+          p_report_id: string
+          p_action: string
+          p_reason: string | null
+          p_suspend_days: number | null
+        }
+        Returns: undefined
+      }
       auto_approve_refunds: { Args: never; Returns: undefined }
+      confirm_delivery: { Args: { p_order_id: string }; Returns: undefined }
       create_orders_from_cart: {
         Args: {
           p_delivery_address: string
@@ -1717,7 +1736,24 @@ export type Database = {
       generate_order_number: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_moderator_or_admin: { Args: never; Returns: boolean }
+      is_suspended: { Args: never; Returns: boolean }
+      merchant_update_order_status: {
+        Args: {
+          p_order_id: string
+          p_new_status: string
+          p_tracking_note: string | null
+        }
+        Returns: undefined
+      }
       my_merchant_id: { Args: never; Returns: string }
+      request_refund: {
+        Args: { p_order_id: string; p_reason: string }
+        Returns: string
+      }
+      respond_to_refund: {
+        Args: { p_refund_id: string; p_approve: boolean; p_response: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

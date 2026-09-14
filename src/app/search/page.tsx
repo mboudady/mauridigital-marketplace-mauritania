@@ -43,6 +43,7 @@ export default async function SearchPage({
       price_mru: p.price_mru,
       category: p.category,
       heroImageUrl: hero?.url ?? null,
+      hasVideo: media.some((m) => m.type === "video"),
       storeName: p.merchants?.store_name ?? "",
     };
   });

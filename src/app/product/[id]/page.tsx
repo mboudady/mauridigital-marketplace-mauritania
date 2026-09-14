@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ConsumerNav } from "@/components/ConsumerNav";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { ReportButton } from "@/components/ReportButton";
 import { formatMRU } from "@/lib/format";
 import { getCartCount } from "@/lib/cart";
 
@@ -21,7 +22,7 @@ export default async function ProductPage({
   const { data: product } = await supabase
     .from("products")
     .select(
-      "id, name, description, price_mru, category, rating, rating_count, merchant_id, product_media(url, is_hero, type, display_order), merchants(store_name, rating, verification_status)"
+      "id, name, description, price_mru, category, rating, rating_count, merchant_id, product_media(url, is_hero, type, display_order, video_provider), merchants(store_name, rating, verification_status)"
     )
     .eq("id", id)
     .maybeSingle();
@@ -30,12 +31,15 @@ export default async function ProductPage({
 
   const cartCount = user ? await getCartCount(supabase, user.id) : 0;
 
-  const images = ((product.product_media ?? []) as Array<{
+  const allMedia = (product.product_media ?? []) as Array<{
     url: string;
     is_hero: boolean | null;
     type: string;
     display_order: number;
-  }>)
+    video_provider: string | null;
+  }>;
+  const video = allMedia.find((m) => m.type === "video");
+  const images = allMedia
     .filter((m) => m.type === "image")
     .sort((a, b) => a.display_order - b.display_order);
 
@@ -51,7 +55,15 @@ export default async function ProductPage({
       <div className="mx-auto grid max-w-4xl gap-8 px-6 py-8 sm:grid-cols-2 sm:px-10">
         <div>
           <div className="relative aspect-square w-full overflow-hidden rounded bg-indigo-800">
-            {images[0] ? (
+            {video ? (
+              <iframe
+                src={video.url}
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            ) : images[0] ? (
               <Image
                 src={images[0].url}
                 alt={product.name}
@@ -66,9 +78,9 @@ export default async function ProductPage({
               </div>
             )}
           </div>
-          {images.length > 1 && (
+          {images.length > (video ? 0 : 1) && (
             <div className="mt-3 grid grid-cols-4 gap-2">
-              {images.slice(1, 5).map((img) => (
+              {images.slice(video ? 0 : 1, video ? 4 : 5).map((img) => (
                 <div
                   key={img.url}
                   className="relative aspect-square overflow-hidden rounded bg-indigo-800"
@@ -131,6 +143,10 @@ export default async function ProductPage({
           >
             ← Back to feed
           </Link>
+
+          <div className="mt-4">
+            <ReportButton contentType="product" contentId={product.id} />
+          </div>
         </div>
       </div>
     </main>

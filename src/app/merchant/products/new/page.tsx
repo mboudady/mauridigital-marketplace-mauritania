@@ -25,6 +25,8 @@ export default function NewProductPage() {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("10");
   const [files, setFiles] = useState<File[]>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoUploadPct, setVideoUploadPct] = useState<number | null>(null);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -103,6 +105,21 @@ export default function NewProductPage() {
       product_id: product.id,
       quantity_total: stockNum,
     });
+
+    // Video upload is best-effort: if Bunny isn't configured yet (503) or
+    // the upload fails, the product still exists with its photos.
+    if (videoFile) {
+      setVideoUploadPct(0);
+      const body = new FormData();
+      body.append("file", videoFile);
+      body.append("productId", product.id);
+      try {
+        await fetch("/api/upload-video", { method: "POST", body });
+      } catch {
+        // Swallow — product creation already succeeded.
+      }
+      setVideoUploadPct(null);
+    }
 
     router.push("/merchant/products");
   }
@@ -205,10 +222,23 @@ export default function NewProductPage() {
               onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
               className="mt-1 w-full text-sm text-sand-600 file:mr-3 file:rounded file:border-0 file:bg-indigo-100 file:px-3 file:py-1.5 file:text-sm file:text-indigo-700"
             />
-            <p className="mt-1 text-xs text-sand-400">
-              Video uploads are coming once the platform&rsquo;s video
-              hosting is connected — photos work now.
-            </p>
+          </div>
+
+          <div>
+            <label htmlFor="video" className="text-sm font-medium">
+              Video{" "}
+              <span className="font-normal text-sand-400">(optional)</span>
+            </label>
+            <input
+              id="video"
+              type="file"
+              accept="video/mp4,video/quicktime,video/webm"
+              onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
+              className="mt-1 w-full text-sm text-sand-600 file:mr-3 file:rounded file:border-0 file:bg-indigo-100 file:px-3 file:py-1.5 file:text-sm file:text-indigo-700"
+            />
+            {videoUploadPct !== null && (
+              <p className="mt-1 text-xs text-indigo-500">Uploading video…</p>
+            )}
           </div>
 
           {status === "error" && (
