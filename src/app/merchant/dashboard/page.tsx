@@ -68,6 +68,12 @@ export default async function MerchantDashboardPage() {
             Manage orders
           </a>
           <a
+            href="/merchant/affiliates"
+            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+          >
+            Affiliates
+          </a>
+          <a
             href="/merchant/analytics"
             className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
           >

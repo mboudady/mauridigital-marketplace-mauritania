@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/AddToCartButton";
@@ -7,6 +8,8 @@ import { ReportButton } from "@/components/ReportButton";
 import { SaveButton } from "@/components/SaveButton";
 import { MessageSellerButton } from "@/components/MessageSellerButton";
 import { ViewTracker } from "@/components/ViewTracker";
+import { AffiliateRefTracker } from "@/components/AffiliateRefTracker";
+import { AffiliateAction } from "@/components/AffiliateAction";
 import { formatMRU } from "@/lib/format";
 
 export default async function ProductPage({
@@ -56,6 +59,9 @@ export default async function ProductPage({
   return (
     <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
       <ViewTracker productId={product.id} merchantId={product.merchant_id} />
+      <Suspense fallback={null}>
+        <AffiliateRefTracker productId={product.id} />
+      </Suspense>
       <div className="safe-top mx-auto grid max-w-4xl gap-8 px-6 pt-6 sm:grid-cols-2 sm:px-10">
         <div>
           <div className="relative aspect-square w-full overflow-hidden rounded bg-indigo-800">
@@ -148,6 +154,10 @@ export default async function ProductPage({
           <div className="mt-4 flex items-center gap-4">
             <SaveButton productId={product.id} />
             <MessageSellerButton merchantId={product.merchant_id} productId={product.id} />
+          </div>
+
+          <div className="mt-4">
+            <AffiliateAction merchantId={product.merchant_id} productId={product.id} />
           </div>
 
           <Link

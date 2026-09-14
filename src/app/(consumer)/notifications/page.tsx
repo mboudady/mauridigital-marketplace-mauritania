@@ -64,6 +64,9 @@ export default function NotificationsPage() {
             <Link href="/saved" className="underline">
               Saved
             </Link>
+            <Link href="/affiliate" className="underline">
+              Affiliate
+            </Link>
           </div>
         </div>
 

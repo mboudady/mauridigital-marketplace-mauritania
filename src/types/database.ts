@@ -1792,6 +1792,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      apply_for_affiliate: {
+        Args: { p_merchant_id: string; p_product_id?: string }
+        Returns: string
+      }
       auto_approve_refunds: { Args: never; Returns: undefined }
       confirm_delivery: { Args: { p_order_id: string }; Returns: undefined }
       create_orders_from_cart: {
@@ -1799,6 +1803,7 @@ export type Database = {
           p_delivery_address: string
           p_delivery_city: string
           p_delivery_phone: string
+          p_referrals?: Json
         }
         Returns: {
           order_id: string
@@ -1809,6 +1814,14 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_moderator_or_admin: { Args: never; Returns: boolean }
       is_suspended: { Args: never; Returns: boolean }
+      log_affiliate_click: {
+        Args: {
+          p_creator_id: string
+          p_product_id: string
+          p_session_id: string
+        }
+        Returns: undefined
+      }
       merchant_update_order_status: {
         Args: {
           p_order_id: string
@@ -1821,6 +1834,10 @@ export type Database = {
       request_refund: {
         Args: { p_order_id: string; p_reason: string }
         Returns: string
+      }
+      respond_to_affiliate_application: {
+        Args: { p_enrollment_id: string; p_approve: boolean; p_reason?: string }
+        Returns: undefined
       }
       respond_to_refund: {
         Args: { p_refund_id: string; p_approve: boolean; p_response: string }

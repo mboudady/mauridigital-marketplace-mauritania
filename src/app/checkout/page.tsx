@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getCartItems, type CartItem } from "@/lib/cart";
 import { logEvent } from "@/lib/events";
+import { getReferralsForProducts } from "@/lib/affiliateReferral";
 import { formatMRU } from "@/lib/format";
 
 export default function CheckoutPage() {
@@ -56,10 +57,12 @@ export default function CheckoutPage() {
     setErrorMessage("");
 
     const supabase = createClient();
+    const referrals = getReferralsForProducts(cartItems.map((i) => i.product_id));
     const { data, error } = await supabase.rpc("create_orders_from_cart", {
       p_delivery_address: address,
       p_delivery_city: city,
       p_delivery_phone: phone,
+      p_referrals: referrals,
     });
 
     if (error) {
