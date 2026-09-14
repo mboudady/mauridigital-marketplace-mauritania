@@ -60,9 +60,25 @@ export default async function MerchantDashboardPage() {
           ))}
         </dl>
 
-        <div className="mt-10 rounded border border-dashed border-sand-300 bg-white p-6 text-center text-sm text-sand-500">
-          Product upload, order management, and analytics land in Phase 2 of
-          the roadmap. This dashboard will grow with each phase.
+        <div className="mt-10 flex gap-3">
+          <a
+            href="/merchant/products"
+            className="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-sand-50 hover:bg-indigo-500"
+          >
+            Manage products
+          </a>
+          <a
+            href="/merchant/products/new"
+            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+          >
+            Add a product
+          </a>
+        </div>
+
+        <div className="mt-6 rounded border border-dashed border-sand-300 bg-white p-6 text-center text-sm text-sand-500">
+          Order management and analytics dashboards land later in the
+          roadmap. Orders can already be placed by customers and tracked
+          from the admin panel.
         </div>
       </div>
     </main>

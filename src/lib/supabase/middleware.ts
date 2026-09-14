@@ -34,12 +34,16 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   const isAuthRoute = path.startsWith("/login") || path.startsWith("/auth");
+  // Feed, search, and individual product pages are browsable without an
+  // account. Login is only required at the point of commitment: cart,
+  // checkout, orders, and the merchant/admin back-offices.
   const isProtectedRoute =
-    path.startsWith("/feed") ||
     path.startsWith("/merchant") ||
     path.startsWith("/admin") ||
     path.startsWith("/orders") ||
-    path.startsWith("/onboarding");
+    path.startsWith("/onboarding") ||
+    path.startsWith("/cart") ||
+    path.startsWith("/checkout");
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
