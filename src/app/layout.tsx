@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -19,6 +19,25 @@ export const metadata: Metadata = {
   title: "Souq — Discover, watch, buy",
   description:
     "A video-first marketplace connecting Mauritanian merchants and shoppers.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Souq",
+  },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#0B0D1E",
 };
 
 export default function RootLayout({
@@ -28,7 +47,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${plexSans.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="overscroll-none font-sans antialiased">
+        {children}
+      </body>
     </html>
   );
 }

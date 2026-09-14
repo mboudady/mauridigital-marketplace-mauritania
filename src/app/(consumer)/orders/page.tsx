@@ -1,9 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ConsumerNav } from "@/components/ConsumerNav";
 import { formatMRU } from "@/lib/format";
-import { getCartCount } from "@/lib/cart";
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "Pending",
@@ -25,19 +23,15 @@ export default async function OrdersPage() {
 
   if (!user) redirect("/login");
 
-  const [{ data: orders }, cartCount] = await Promise.all([
-    supabase
-      .from("orders")
-      .select("id, order_number, total_mru, status, created_at, merchants(store_name)")
-      .eq("customer_id", user.id)
-      .order("created_at", { ascending: false }),
-    getCartCount(supabase, user.id),
-  ]);
+  const { data: orders } = await supabase
+    .from("orders")
+    .select("id, order_number, total_mru, status, created_at, merchants(store_name)")
+    .eq("customer_id", user.id)
+    .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-indigo-900 text-sand-100">
-      <ConsumerNav cartCount={cartCount} />
-      <div className="mx-auto max-w-2xl px-6 py-8 sm:px-10">
+    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+      <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
         <h1 className="font-display text-2xl text-sand-50">Your orders</h1>
 
         {!orders?.length ? (

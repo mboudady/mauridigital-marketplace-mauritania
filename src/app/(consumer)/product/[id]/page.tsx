@@ -2,11 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ConsumerNav } from "@/components/ConsumerNav";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ReportButton } from "@/components/ReportButton";
 import { formatMRU } from "@/lib/format";
-import { getCartCount } from "@/lib/cart";
 
 export default async function ProductPage({
   params,
@@ -15,9 +13,6 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const { data: product } = await supabase
     .from("products")
@@ -28,8 +23,6 @@ export default async function ProductPage({
     .maybeSingle();
 
   if (!product) notFound();
-
-  const cartCount = user ? await getCartCount(supabase, user.id) : 0;
 
   const allMedia = (product.product_media ?? []) as Array<{
     url: string;
@@ -50,9 +43,8 @@ export default async function ProductPage({
   } | null;
 
   return (
-    <main className="min-h-screen bg-indigo-900 text-sand-100">
-      <ConsumerNav cartCount={cartCount} />
-      <div className="mx-auto grid max-w-4xl gap-8 px-6 py-8 sm:grid-cols-2 sm:px-10">
+    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+      <div className="safe-top mx-auto grid max-w-4xl gap-8 px-6 pt-6 sm:grid-cols-2 sm:px-10">
         <div>
           <div className="relative aspect-square w-full overflow-hidden rounded bg-indigo-800">
             {video ? (

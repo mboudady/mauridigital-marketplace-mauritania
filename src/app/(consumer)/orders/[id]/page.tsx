@@ -1,10 +1,8 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ConsumerNav } from "@/components/ConsumerNav";
 import { OrderActions } from "@/components/OrderActions";
 import { formatMRU } from "@/lib/format";
-import { getCartCount } from "@/lib/cart";
 
 const STEPS = ["pending", "confirmed", "shipped", "delivered", "completed"];
 
@@ -24,26 +22,22 @@ export default async function OrderDetailPage({
 
   if (!user) redirect("/login");
 
-  const [{ data: order }, cartCount] = await Promise.all([
-    supabase
-      .from("orders")
-      .select(
-        "id, order_number, status, total_mru, delivery_address, delivery_city, delivery_phone, created_at, merchants(store_name), order_items(quantity, price_per_unit_mru, total_mru, products(name))"
-      )
-      .eq("id", id)
-      .eq("customer_id", user.id)
-      .maybeSingle(),
-    getCartCount(supabase, user.id),
-  ]);
+  const { data: order } = await supabase
+    .from("orders")
+    .select(
+      "id, order_number, status, total_mru, delivery_address, delivery_city, delivery_phone, created_at, merchants(store_name), order_items(quantity, price_per_unit_mru, total_mru, products(name))"
+    )
+    .eq("id", id)
+    .eq("customer_id", user.id)
+    .maybeSingle();
 
   if (!order) notFound();
 
   const currentStepIndex = STEPS.indexOf(order.status);
 
   return (
-    <main className="min-h-screen bg-indigo-900 text-sand-100">
-      <ConsumerNav cartCount={cartCount} />
-      <div className="mx-auto max-w-2xl px-6 py-8 sm:px-10">
+    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+      <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
         {placed === "1" && (
           <div className="mb-6 rounded border border-indigo-600 bg-indigo-800 p-4 text-sm text-sand-200">
             Order placed! You&rsquo;ll pay {formatMRU(order.total_mru)} in

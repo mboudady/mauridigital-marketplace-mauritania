@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { ConsumerNav } from "@/components/ConsumerNav";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
-import { getCartCount } from "@/lib/cart";
 
 export default async function SearchPage({
   searchParams,
@@ -10,11 +8,6 @@ export default async function SearchPage({
 }) {
   const { q } = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const cartCount = user ? await getCartCount(supabase, user.id) : 0;
 
   let products: any[] = [];
   if (q && q.trim().length > 0) {
@@ -49,9 +42,8 @@ export default async function SearchPage({
   });
 
   return (
-    <main className="min-h-screen bg-indigo-900">
-      <ConsumerNav cartCount={cartCount} />
-      <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
+    <main className="min-h-screen bg-indigo-900 pb-24">
+      <div className="safe-top mx-auto max-w-5xl px-6 pt-6 sm:px-10">
         <form className="max-w-md">
           <input
             type="search"

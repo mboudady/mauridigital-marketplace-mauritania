@@ -6,6 +6,11 @@
   color-scheme: light;
 }
 
+html, body {
+  overscroll-behavior-y: none;
+  height: 100%;
+}
+
 body {
   background-color: #FBF7F0;
   color: #1A2143;
@@ -14,6 +19,23 @@ body {
 ::selection {
   background-color: #C9A15F;
   color: #0B0D1E;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Hide scrollbar on the snap feed while keeping it scrollable */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

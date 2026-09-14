@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getCartItems, updateCartQuantity, type CartItem } from "@/lib/cart";
 import { formatMRU } from "@/lib/format";
-import { ConsumerNav } from "@/components/ConsumerNav";
 
 type LineItem = CartItem & {
   name: string;
@@ -91,19 +90,12 @@ export default function CartPage() {
   const subtotal = lines.reduce((sum, l) => sum + l.price_mru * l.quantity, 0);
 
   if (loading) {
-    return (
-      <main className="min-h-screen bg-indigo-900">
-        <ConsumerNav />
-      </main>
-    );
+    return <main className="min-h-screen bg-indigo-900" />;
   }
 
   return (
-    <main className="min-h-screen bg-indigo-900 text-sand-100">
-      <ConsumerNav
-        cartCount={lines.reduce((s, l) => s + l.quantity, 0)}
-      />
-      <div className="mx-auto max-w-2xl px-6 py-8 sm:px-10">
+    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+      <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
         <h1 className="font-display text-2xl text-sand-50">Your cart</h1>
 
         {lines.length === 0 ? (

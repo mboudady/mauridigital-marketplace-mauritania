@@ -42,6 +42,9 @@ export async function setCartItems(
     .from("cart")
     .upsert({ user_id: userId, items: cleaned }, { onConflict: "user_id" });
   if (error) throw error;
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("cart:updated"));
+  }
 }
 
 export async function addToCart(
