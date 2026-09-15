@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -62,6 +62,7 @@ function FeedCard({
   const [following, setFollowing] = useState(false);
   const [adding, setAdding] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const gestureStart = useRef<{ x: number; y: number } | null>(null);
   const [paused, setPaused] = useState(false);
   const [showPauseFlash, setShowPauseFlash] = useState(false);
 
@@ -73,8 +74,8 @@ function FeedCard({
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   // Auto-advance through photos every 3s when there's no video and more
-  // than one image. Restarts on every index change (including manual taps),
-  // so a manual navigation gets its own full 3s before advancing again.
+  // than one image. Restarts on every index change (including manual swipes
+  // or taps), so a manual navigation gets its own full 3s before advancing.
   useEffect(() => {
     if (product.videoEmbedUrl || product.imageUrls.length <= 1) return;
     const timer = setInterval(() => {
@@ -82,6 +83,42 @@ function FeedCard({
     }, 3000);
     return () => clearInterval(timer);
   }, [product.videoEmbedUrl, product.imageUrls.length, imageIndex]);
+
+  function handleGestureStart(e: React.PointerEvent) {
+    gestureStart.current = { x: e.clientX, y: e.clientY };
+  }
+
+  function handleGestureEnd(e: React.PointerEvent) {
+    const start = gestureStart.current;
+    gestureStart.current = null;
+    if (!start || product.imageUrls.length <= 1) return;
+
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+
+    // A mostly-vertical drag is the user swiping to the next/previous
+    // product in the feed — leave it to the native scroll-snap container,
+    // don't treat it as a photo swipe.
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) return;
+
+    const SWIPE_THRESHOLD = 40;
+    if (Math.abs(dx) > SWIPE_THRESHOLD) {
+      if (dx < 0) {
+        setImageIndex((i) => (i + 1) % product.imageUrls.length);
+      } else {
+        setImageIndex((i) => (i - 1 + product.imageUrls.length) % product.imageUrls.length);
+      }
+    } else {
+      // Treat as a tap: left half = previous, right half = next.
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tapX = e.clientX - rect.left;
+      if (tapX < rect.width / 2) {
+        setImageIndex((i) => (i - 1 + product.imageUrls.length) % product.imageUrls.length);
+      } else {
+        setImageIndex((i) => (i + 1) % product.imageUrls.length);
+      }
+    }
+  }
 
   async function logEvent(eventType: "like" | "unlike" | "save" | "unsave" | "add_to_cart") {
     const supabase = createClient();
@@ -209,26 +246,18 @@ function FeedCard({
           </div>
         )}
 
-        {/* Manual tap-to-navigate zones — left half = previous, right half =
-            next. Sit beneath the rail/hashtag/sound-toggle elements in DOM
-            order so those still receive clicks at their own position. */}
+        {/* Manual navigation: tap left/right half, or swipe left/right.
+            Sits beneath the rail/hashtag/sound-toggle elements in DOM
+            order so those still receive clicks at their own position.
+            Uses pointer events (not onClick) so real drag/swipe gestures
+            register, not just taps — a mostly-vertical drag is left alone
+            so it doesn't fight the feed's own vertical scroll-snap. */}
         {!product.videoEmbedUrl && product.imageUrls.length > 1 && (
-          <>
-            <button
-              aria-label="Previous photo"
-              onClick={() =>
-                setImageIndex(
-                  (i) => (i - 1 + product.imageUrls.length) % product.imageUrls.length
-                )
-              }
-              className="absolute inset-y-0 left-0 w-1/2"
-            />
-            <button
-              aria-label="Next photo"
-              onClick={() => setImageIndex((i) => (i + 1) % product.imageUrls.length)}
-              className="absolute inset-y-0 right-0 w-1/2"
-            />
-          </>
+          <div
+            onPointerDown={handleGestureStart}
+            onPointerUp={handleGestureEnd}
+            className="absolute inset-0"
+          />
         )}
 
         {!product.videoEmbedUrl && product.imageUrls.length > 1 && (

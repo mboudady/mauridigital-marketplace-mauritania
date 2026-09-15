@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 function RowIcon({ children }: { children: React.ReactNode }) {
   return (
@@ -167,6 +168,11 @@ export default async function ProfilePage() {
               />
             </>
           )}
+        </div>
+
+        <div className="mt-6">
+          <p className="mb-2 text-xs text-ink-500">Language</p>
+          <LanguageSwitcher />
         </div>
 
         <div className="mt-6">

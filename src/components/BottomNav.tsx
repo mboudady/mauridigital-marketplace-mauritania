@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getCartCount } from "@/lib/cart";
+import { useLocale } from "@/components/LocaleProvider";
 
 function HomeIcon({ active }: { active: boolean }) {
   return (
@@ -53,17 +54,18 @@ function ProfileIcon({ active }: { active: boolean }) {
 }
 
 const SIDE_TABS = [
-  { href: "/feed", label: "Home", Icon: HomeIcon },
-  { href: "/search", label: "Discover", Icon: SearchIcon },
+  { href: "/feed", labelKey: "nav_home" as const, Icon: HomeIcon },
+  { href: "/search", labelKey: "nav_discover" as const, Icon: SearchIcon },
 ];
 const RIGHT_TABS = [
-  { href: "/notifications", label: "Inbox", Icon: InboxIcon },
-  { href: "/profile", label: "Profile", Icon: ProfileIcon },
+  { href: "/notifications", labelKey: "nav_inbox" as const, Icon: InboxIcon },
+  { href: "/profile", labelKey: "nav_profile" as const, Icon: ProfileIcon },
 ];
 
 export function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useLocale();
   const [cartCount, setCartCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMerchant, setIsMerchant] = useState(false);
@@ -121,7 +123,7 @@ export function BottomNav() {
   return (
     <nav className="border-t border-ink-800 bg-ink-950">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-2">
-        {SIDE_TABS.map(({ href, label, Icon }) => {
+        {SIDE_TABS.map(({ href, labelKey, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
@@ -132,7 +134,7 @@ export function BottomNav() {
               }`}
             >
               <Icon active={active} />
-              <span className="text-[10px]">{label}</span>
+              <span className="text-[10px]">{t(labelKey)}</span>
             </Link>
           );
         })}
@@ -147,7 +149,7 @@ export function BottomNav() {
           </svg>
         </button>
 
-        {RIGHT_TABS.map(({ href, label, Icon }) => {
+        {RIGHT_TABS.map(({ href, labelKey, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           const badge = href === "/notifications" ? unreadCount : href === "/profile" ? cartCount : 0;
           return (
@@ -159,7 +161,7 @@ export function BottomNav() {
               }`}
             >
               <Icon active={active} />
-              <span className="text-[10px]">{label}</span>
+              <span className="text-[10px]">{t(labelKey)}</span>
               {badge > 0 && (
                 <span className="absolute -right-1 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ink-50 px-1 text-[9px] text-ink-950">
                   {badge}

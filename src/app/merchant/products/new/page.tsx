@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { IMAGE_FILTERS, applyFilterToImage, type ImageFilterId } from "@/lib/imageFilters";
+import { IMAGE_FILTERS, applyFilterToImage, applyFilterToVideo, type ImageFilterId } from "@/lib/imageFilters";
 
 const CATEGORIES = [
   "Fashion",
@@ -34,6 +34,8 @@ export default function NewProductPage() {
   const [hashtagInput, setHashtagInput] = useState("");
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [filterId, setFilterId] = useState<ImageFilterId>("normal");
+  const [videoProcessing, setVideoProcessing] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -135,8 +137,11 @@ export default function NewProductPage() {
     }
 
     if (videoFile) {
+      setVideoProcessing(true);
+      const processedVideo = await applyFilterToVideo(videoFile, filterId, setVideoProgress);
+      setVideoProcessing(false);
       const body = new FormData();
-      body.append("file", videoFile);
+      body.append("file", processedVideo);
       body.append("productId", product.id);
       try {
         await fetch("/api/upload-video", { method: "POST", body });
@@ -158,7 +163,15 @@ export default function NewProductPage() {
             className="relative aspect-[9/16] w-56 overflow-hidden rounded-xl border border-ink-700 bg-ink-900"
           >
             {videoFile ? (
-              <video src={previewUrl!} className="h-full w-full object-cover" muted loop autoPlay playsInline />
+              <video
+                src={previewUrl!}
+                className="h-full w-full object-cover"
+                muted
+                loop
+                autoPlay
+                playsInline
+                style={{ filter: IMAGE_FILTERS.find((f) => f.id === filterId)?.css }}
+              />
             ) : files[0] ? (
               <Image
                 src={previewUrl!}
@@ -225,7 +238,7 @@ export default function NewProductPage() {
             </div>
           )}
 
-          {files.length > 0 && !videoFile && (
+          {(files.length > 0 || videoFile) && (
             <div className="mt-4 flex gap-3 overflow-x-auto px-4 pb-1">
               {IMAGE_FILTERS.map((f) => (
                 <button
@@ -239,14 +252,24 @@ export default function NewProductPage() {
                       filterId === f.id ? "border-ink-50" : "border-transparent"
                     }`}
                   >
-                    <Image
-                      src={previewUrl!}
-                      alt=""
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                      style={{ filter: f.css }}
-                    />
+                    {videoFile ? (
+                      <video
+                        src={previewUrl!}
+                        muted
+                        playsInline
+                        className="h-full w-full object-cover"
+                        style={{ filter: f.css }}
+                      />
+                    ) : (
+                      <Image
+                        src={previewUrl!}
+                        alt=""
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                        style={{ filter: f.css }}
+                      />
+                    )}
                   </div>
                   <span className={`text-[10px] ${filterId === f.id ? "text-ink-50" : "text-ink-500"}`}>
                     {f.label}
@@ -351,12 +374,26 @@ export default function NewProductPage() {
 
           {status === "error" && <p className="text-sm text-red-400">{errorMessage}</p>}
 
+          {videoProcessing && (
+            <div>
+              <p className="text-xs text-ink-400">
+                Applying filter to video… ({Math.round(videoProgress * 100)}%)
+              </p>
+              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-ink-800">
+                <div
+                  className="h-full bg-ink-50 transition-all"
+                  style={{ width: `${videoProgress * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={status === "saving"}
+            disabled={status === "saving" || videoProcessing}
             className="w-full rounded-full bg-ink-50 px-4 py-3 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
           >
-            {status === "saving" ? "Posting…" : "Post"}
+            {videoProcessing ? "Processing video…" : status === "saving" ? "Posting…" : "Post"}
           </button>
         </div>
       </form>

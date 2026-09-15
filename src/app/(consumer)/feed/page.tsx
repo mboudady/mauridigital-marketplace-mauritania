@@ -2,29 +2,36 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { VerticalFeed, type FeedCardData } from "@/components/VerticalFeed";
 import { OnboardingTutorial } from "@/components/OnboardingTutorial";
+import { getServerTranslator } from "@/lib/serverLocale";
 
-function FeedTabs({ active }: { active: "for-you" | "following" }) {
+function FeedTabs({
+  active,
+  t,
+}: {
+  active: "for-you" | "following";
+  t: Awaited<ReturnType<typeof getServerTranslator>>["t"];
+}) {
   return (
     <div className="safe-top relative flex items-center justify-center gap-6 bg-ink-950 py-3 text-sm">
       <Link
         href="/feed"
         className={active === "for-you" ? "font-medium text-ink-50" : "text-ink-500"}
       >
-        For You
+        {t("feed_for_you")}
       </Link>
       <Link
         href="/feed?tab=following"
         className={active === "following" ? "font-medium text-ink-50" : "text-ink-500"}
       >
-        Following
+        {t("feed_following")}
       </Link>
       <Link href="/live" className="flex items-center gap-1 text-ink-500">
         <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-        LIVE
+        {t("nav_live")}
       </Link>
       <Link
         href="/search"
-        aria-label="Search"
+        aria-label={t("nav_search")}
         className="absolute right-4 text-ink-50"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -45,6 +52,7 @@ export default async function FeedPage({
 }) {
   const { tab } = await searchParams;
   const isFollowing = tab === "following";
+  const { t } = await getServerTranslator();
 
   const supabase = await createClient();
   const {
@@ -54,11 +62,11 @@ export default async function FeedPage({
   if (isFollowing && !user) {
     return (
       <div className="flex h-full flex-col bg-ink-950">
-        <FeedTabs active="following" />
+        <FeedTabs active="following" t={t} />
         <div className="flex flex-1 flex-col items-center justify-center px-6 text-center text-ink-300">
           <p className="text-sm">Log in to see products from merchants you follow.</p>
           <Link href="/login" className="mt-3 text-sm text-ink-50 underline">
-            Log in
+            {t("action_log_in")}
           </Link>
         </div>
       </div>
@@ -226,7 +234,7 @@ export default async function FeedPage({
   return (
     <div className="flex h-full flex-col bg-ink-950">
       <OnboardingTutorial />
-      <FeedTabs active={isFollowing ? "following" : "for-you"} />
+      <FeedTabs active={isFollowing ? "following" : "for-you"} t={t} />
       <div className="min-h-0 flex-1">
         <VerticalFeed products={cards} />
       </div>

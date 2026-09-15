@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -59,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${plexSans.variable}`}>
       <body className="overscroll-none font-sans antialiased">
-        {children}
+        <LocaleProvider>{children}</LocaleProvider>
       </body>
     </html>
   );

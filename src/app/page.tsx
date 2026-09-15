@@ -1,21 +1,23 @@
 import Link from "next/link";
 import { MarketingHeader } from "@/components/MarketingHeader";
 import { MarketingFooter } from "@/components/MarketingFooter";
+import { getServerTranslator } from "@/lib/serverLocale";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { t, dir } = await getServerTranslator();
   return (
-    <main className="min-h-screen bg-ink-950 text-ink-100">
+    <main dir={dir} className="min-h-screen bg-ink-950 text-ink-100">
       <MarketingHeader />
 
       <div className="mx-auto flex max-w-5xl flex-col px-6 pb-24 sm:px-10">
         <section className="mt-20 grid gap-12 sm:mt-32 sm:grid-cols-5 sm:items-end">
           <div className="sm:col-span-3">
             <h1 className="font-display text-5xl leading-[1.05] text-ink-50 sm:text-6xl">
-              Watch a product.
+              {t("landing_headline_1")}
               <br />
-              Trust the seller.
+              {t("landing_headline_2")}
               <br />
-              <span className="italic text-ink-300">Buy in a tap.</span>
+              <span className="italic text-ink-300">{t("landing_headline_3")}</span>
             </h1>
             <p className="mt-6 max-w-md text-base leading-relaxed text-ink-300">
               Souq brings Nouakchott&rsquo;s boutiques and sellers into one
@@ -28,13 +30,13 @@ export default function HomePage() {
                 href="/login"
                 className="rounded bg-ink-50 px-6 py-3 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-100"
               >
-                Start browsing
+                {t("landing_start_browsing")}
               </Link>
               <Link
                 href="/for-merchants"
                 className="text-sm text-ink-100 underline decoration-ink-500 underline-offset-4 hover:text-ink-50"
               >
-                Sell on Souq
+                {t("landing_sell_on_souq")}
               </Link>
             </div>
           </div>
