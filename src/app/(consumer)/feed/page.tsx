@@ -5,7 +5,7 @@ import { OnboardingTutorial } from "@/components/OnboardingTutorial";
 
 function FeedTabs({ active }: { active: "for-you" | "following" }) {
   return (
-    <div className="safe-top flex items-center justify-center gap-6 bg-ink-950 py-3 text-sm">
+    <div className="safe-top relative flex items-center justify-center gap-6 bg-ink-950 py-3 text-sm">
       <Link
         href="/feed"
         className={active === "for-you" ? "font-medium text-ink-50" : "text-ink-500"}
@@ -21,6 +21,16 @@ function FeedTabs({ active }: { active: "for-you" | "following" }) {
       <Link href="/live" className="flex items-center gap-1 text-ink-500">
         <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
         LIVE
+      </Link>
+      <Link
+        href="/search"
+        aria-label="Search"
+        className="absolute right-4 text-ink-50"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="2" />
+          <path d="M20 20l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
       </Link>
     </div>
   );

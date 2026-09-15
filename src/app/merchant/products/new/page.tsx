@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { IMAGE_FILTERS, applyFilterToImage, type ImageFilterId } from "@/lib/imageFilters";
 
 const CATEGORIES = [
   "Fashion",
@@ -32,6 +33,7 @@ export default function NewProductPage() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [hashtagInput, setHashtagInput] = useState("");
   const [hashtags, setHashtags] = useState<string[]>([]);
+  const [filterId, setFilterId] = useState<ImageFilterId>("normal");
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -100,7 +102,7 @@ export default function NewProductPage() {
     }
 
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+      const file = await applyFilterToImage(files[i], filterId);
       const ext = file.name.split(".").pop();
       const path = `${merchant.id}/${product.id}/${i}.${ext}`;
 
@@ -158,7 +160,14 @@ export default function NewProductPage() {
             {videoFile ? (
               <video src={previewUrl!} className="h-full w-full object-cover" muted loop autoPlay playsInline />
             ) : files[0] ? (
-              <Image src={previewUrl!} alt="" fill sizes="224px" className="object-cover" />
+              <Image
+                src={previewUrl!}
+                alt=""
+                fill
+                sizes="224px"
+                className="object-cover"
+                style={{ filter: IMAGE_FILTERS.find((f) => f.id === filterId)?.css }}
+              />
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-ink-400">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -212,6 +221,37 @@ export default function NewProductPage() {
                     <span className="absolute bottom-0 left-0 right-0 bg-black/60 text-center text-[9px]">cover</span>
                   )}
                 </div>
+              ))}
+            </div>
+          )}
+
+          {files.length > 0 && !videoFile && (
+            <div className="mt-4 flex gap-3 overflow-x-auto px-4 pb-1">
+              {IMAGE_FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFilterId(f.id)}
+                  className="flex shrink-0 flex-col items-center gap-1.5"
+                >
+                  <div
+                    className={`relative h-12 w-12 overflow-hidden rounded-full border-2 ${
+                      filterId === f.id ? "border-ink-50" : "border-transparent"
+                    }`}
+                  >
+                    <Image
+                      src={previewUrl!}
+                      alt=""
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                      style={{ filter: f.css }}
+                    />
+                  </div>
+                  <span className={`text-[10px] ${filterId === f.id ? "text-ink-50" : "text-ink-500"}`}>
+                    {f.label}
+                  </span>
+                </button>
               ))}
             </div>
           )}

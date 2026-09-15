@@ -1,29 +1,28 @@
 import type { Config } from "tailwindcss";
 
-// Dark, native-app palette: near-black surfaces (not literally #000, for
-// depth) with a single vivid accent. Deliberately NOT TikTok's cyan/pink
-// duotone — that's their trademarked visual identity — but the same
-// register: dark, high-contrast, cinematic for video, calm for dashboards.
+// Colors are CSS variables (see globals.css) that swap automatically with
+// the OS light/dark preference via prefers-color-scheme — every component
+// references these token names, so the swap cascades everywhere without
+// touching component files.
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
         ink: {
-          50: "#0B0B0A",
-          100: "#1B1B18",
-          300: "#63635A",
-          400: "#8F8F89",
-          500: "#B5B5AC",
-          600: "#CCCCC7",
-          700: "#DCDCD8",
-          800: "#E7E7E4",
-          850: "#EBEBE8",
-          900: "#F1F1EF",
-          950: "#F8F8F6",
+          50: "rgb(var(--ink-50) / <alpha-value>)",
+          100: "rgb(var(--ink-100) / <alpha-value>)",
+          300: "rgb(var(--ink-300) / <alpha-value>)",
+          400: "rgb(var(--ink-400) / <alpha-value>)",
+          500: "rgb(var(--ink-500) / <alpha-value>)",
+          600: "rgb(var(--ink-600) / <alpha-value>)",
+          700: "rgb(var(--ink-700) / <alpha-value>)",
+          800: "rgb(var(--ink-800) / <alpha-value>)",
+          850: "rgb(var(--ink-850) / <alpha-value>)",
+          900: "rgb(var(--ink-900) / <alpha-value>)",
+          950: "rgb(var(--ink-950) / <alpha-value>)",
         },
         spark: {
-          // primary accent — electric violet
           300: "#C4B0FF",
           400: "#A480FF",
           500: "#8A5CFF",
@@ -31,7 +30,6 @@ const config: Config = {
           700: "#5C2ECC",
         },
         gold: {
-          // secondary accent — ratings, highlights, live badge
           400: "#FFC94D",
           500: "#FFB020",
           600: "#E69500",

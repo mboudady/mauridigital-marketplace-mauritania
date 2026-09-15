@@ -6,6 +6,25 @@ function dayKey(d: string | Date) {
   return new Date(d).toISOString().slice(0, 10);
 }
 
+function MetricTile({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+  return (
+    <div className="rounded-lg border border-ink-700 bg-ink-850 p-4">
+      <dt className="text-xs text-ink-400">{label}</dt>
+      <dd className="mt-1.5 font-display text-2xl">{value}</dd>
+      {sub && <p className="mt-0.5 text-xs text-ink-500">{sub}</p>}
+    </div>
+  );
+}
+
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-lg border border-ink-700 bg-ink-850 p-5">
+      <h2 className="text-sm font-medium text-ink-100">{title}</h2>
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
 export default async function MerchantAnalyticsPage() {
   const supabase = await createClient();
   const {
@@ -67,7 +86,6 @@ export default async function MerchantAnalyticsPage() {
       .gte("created_at", since30),
   ]);
 
-  // Sales trend (last 14 days)
   const days: string[] = [];
   for (let i = 13; i >= 0; i--) {
     days.push(dayKey(new Date(Date.now() - i * 24 * 60 * 60 * 1000)));
@@ -79,7 +97,6 @@ export default async function MerchantAnalyticsPage() {
   });
   const maxDayGmv = Math.max(1, ...Object.values(gmvByDay));
 
-  // Top products by revenue
   const revenueByProduct = new Map<string, number>();
   (orderItems ?? []).forEach((item: any) => {
     revenueByProduct.set(
@@ -96,6 +113,7 @@ export default async function MerchantAnalyticsPage() {
   const gmv30 = orders30.reduce((s, o) => s + o.total_mru, 0);
   const avgOrderValue = orders30.length ? Math.round(gmv30 / orders30.length) : 0;
   const refundedCount = orders30.filter((o) => o.status === "refunded").length;
+  const totalViews = (products ?? []).reduce((s, p) => s + (p.view_count ?? 0), 0);
 
   const funnel = [
     { label: "Product views", value: viewEvents ?? 0 },
@@ -104,53 +122,50 @@ export default async function MerchantAnalyticsPage() {
   ];
 
   return (
-    <div>
-      <p className="text-sm text-ink-500">Last 30 days</p>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-xl">Performance</h1>
+        <p className="text-xs text-ink-500">Last 30 days</p>
+      </div>
 
-      <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[
-            { label: "GMV (30d)", value: formatMRU(gmv30) },
-            { label: "Orders (30d)", value: orders30.length },
-            { label: "Avg order value", value: formatMRU(avgOrderValue) },
-            { label: "Refunded", value: refundedCount },
-          ].map((s) => (
-            <div key={s.label} className="rounded border border-ink-700 bg-ink-850 p-4">
-              <dt className="text-xs text-ink-500">{s.label}</dt>
-              <dd className="mt-1 font-display text-xl">{s.value}</dd>
-            </div>
-          ))}
-        </dl>
+      <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <MetricTile label="GMV" value={formatMRU(gmv30)} sub="last 30 days" />
+        <MetricTile label="Orders" value={orders30.length} sub="last 30 days" />
+        <MetricTile label="Avg order value" value={formatMRU(avgOrderValue)} />
+        <MetricTile label="Refunded orders" value={refundedCount} />
+        <MetricTile label="Total views" value={totalViews.toLocaleString()} sub="all time" />
+        <MetricTile label="Lifetime GMV" value={formatMRU(merchant.total_gmv ?? 0)} />
+        <MetricTile label="Lifetime orders" value={merchant.total_sales ?? 0} />
+        <MetricTile label="Products" value={products?.length ?? 0} />
+      </dl>
 
-        <section className="mt-10">
-          <h2 className="text-sm font-medium text-ink-300">Sales, last 14 days</h2>
-          <div className="mt-3 flex h-32 items-end gap-1 rounded border border-ink-700 bg-ink-850 p-4">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card title="Sales, last 14 days">
+          <div className="flex h-32 items-end gap-1.5">
             {days.map((d) => (
               <div key={d} className="flex flex-1 flex-col items-center gap-1">
                 <div
-                  className="w-full rounded-sm bg-ink-8000"
+                  className="w-full rounded-sm bg-ink-50"
                   style={{
-                    height: `${Math.max(4, (gmvByDay[d] / maxDayGmv) * 96)}px`,
+                    height: `${Math.max(4, (gmvByDay[d] / maxDayGmv) * 100)}px`,
                   }}
                   title={`${d}: ${formatMRU(gmvByDay[d])}`}
                 />
               </div>
             ))}
           </div>
-          <p className="mt-1 text-xs text-ink-400">
+          <p className="mt-2 text-xs text-ink-500">
             {days[0]} → {days[days.length - 1]}
           </p>
-        </section>
+        </Card>
 
-        <section className="mt-10">
-          <h2 className="text-sm font-medium text-ink-300">
-            Conversion funnel (30d)
-          </h2>
-          <div className="mt-3 space-y-2 rounded border border-ink-700 bg-ink-850 p-4">
-            {funnel.map((f, i) => {
+        <Card title="Conversion funnel (30d)">
+          <div className="space-y-3">
+            {funnel.map((f) => {
               const pct = funnel[0].value ? (f.value / funnel[0].value) * 100 : 0;
               return (
                 <div key={f.label}>
-                  <div className="flex justify-between text-xs text-ink-500">
+                  <div className="flex justify-between text-xs text-ink-400">
                     <span>{f.label}</span>
                     <span>{f.value}</span>
                   </div>
@@ -164,16 +179,16 @@ export default async function MerchantAnalyticsPage() {
               );
             })}
           </div>
-        </section>
+        </Card>
+      </div>
 
-        <section className="mt-10">
-          <h2 className="text-sm font-medium text-ink-300">Top products (30d revenue)</h2>
-          <ul className="mt-3 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
-            {topProducts.length === 0 && (
-              <li className="p-4 text-sm text-ink-400">No sales yet.</li>
-            )}
+      <Card title="Top products (30d revenue)">
+        {topProducts.length === 0 ? (
+          <p className="text-sm text-ink-500">No sales yet.</p>
+        ) : (
+          <ul className="divide-y divide-ink-800">
             {topProducts.map((p) => (
-              <li key={p.id} className="flex items-center justify-between p-4 text-sm">
+              <li key={p.id} className="flex items-center justify-between py-3 text-sm first:pt-0 last:pb-0">
                 <div>
                   <p>{p.name}</p>
                   <p className="text-xs text-ink-500">
@@ -184,7 +199,8 @@ export default async function MerchantAnalyticsPage() {
               </li>
             ))}
           </ul>
-        </section>
+        )}
+      </Card>
     </div>
   );
 }

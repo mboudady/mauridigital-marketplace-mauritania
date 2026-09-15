@@ -33,16 +33,10 @@ function InboxIcon({ active }: { active: boolean }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path
-        d="M6 10a6 6 0 1112 0c0 3.2 1 4.8 1.7 5.6.3.3.1.9-.3.9H4.6c-.4 0-.6-.6-.3-.9C5 14.8 6 13.2 6 10z"
+        d="M4 6.5A2.5 2.5 0 016.5 4h11A2.5 2.5 0 0120 6.5v7A2.5 2.5 0 0117.5 16H10l-4.5 4v-4H6.5A2.5 2.5 0 014 13.5v-7z"
         stroke="currentColor"
         strokeWidth={active ? 2.5 : 2}
         strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.5 19a2.5 2.5 0 005 0"
-        stroke="currentColor"
-        strokeWidth={active ? 2.5 : 2}
         strokeLinecap="round"
       />
     </svg>

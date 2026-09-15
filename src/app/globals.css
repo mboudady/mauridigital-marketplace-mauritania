@@ -2,8 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light mode is the default; dark mode overrides via prefers-color-scheme
+   below. Values are "R G B" (no commas) for Tailwind's rgb(var(...) / a)
+   opacity-modifier pattern. Light and dark are true inversions of each
+   other's lightness, preserving each token's role (primary text, muted
+   text, border, surface) rather than just swapping which name owns which
+   value — otherwise muted text would end up nearly as dark as primary
+   text in one of the two modes. */
 :root {
   color-scheme: light;
+
+  --ink-50: 11 11 10;
+  --ink-100: 27 27 24;
+  --ink-300: 99 99 90;
+  --ink-400: 143 143 137;
+  --ink-500: 181 181 172;
+  --ink-600: 204 204 199;
+  --ink-700: 220 220 216;
+  --ink-800: 231 231 228;
+  --ink-850: 235 235 232;
+  --ink-900: 241 241 239;
+  --ink-950: 248 248 246;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --ink-50: 244 244 246;
+    --ink-100: 228 228 232;
+    --ink-300: 156 156 168;
+    --ink-400: 110 110 122;
+    --ink-500: 74 74 84;
+    --ink-600: 51 51 57;
+    --ink-700: 35 35 39;
+    --ink-800: 24 24 27;
+    --ink-850: 20 20 22;
+    --ink-900: 14 14 16;
+    --ink-950: 8 8 10;
+  }
 }
 
 html, body {
@@ -12,13 +49,13 @@ html, body {
 }
 
 body {
-  background-color: #F8F8F6;
-  color: #0B0B0A;
+  background-color: rgb(var(--ink-950));
+  color: rgb(var(--ink-50));
 }
 
 ::selection {
-  background-color: #0B0B0A;
-  color: #F8F8F6;
+  background-color: rgb(var(--ink-50));
+  color: rgb(var(--ink-950));
 }
 
 .safe-top {

@@ -304,6 +304,48 @@ export type Database = {
           },
         ]
       }
+      comments: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          product_id: string
+          text: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          product_id: string
+          text: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          product_id?: string
+          text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           created_at: string
@@ -1852,6 +1894,10 @@ export type Database = {
         Returns: undefined
       }
       auto_approve_refunds: { Args: never; Returns: undefined }
+      broadcast_system_notification: {
+        Args: { p_title: string; p_body: string }
+        Returns: number
+      }
       confirm_delivery: { Args: { p_order_id: string }; Returns: undefined }
       create_orders_from_cart: {
         Args: {

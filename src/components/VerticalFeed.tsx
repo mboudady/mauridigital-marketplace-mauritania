@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { addToCart } from "@/lib/cart";
 import { logEvent as logEventHelper } from "@/lib/events";
 import { formatMRU } from "@/lib/format";
+import { CommentsSheet } from "@/components/CommentsSheet";
 
 export type FeedCardData = {
   id: string;
@@ -57,16 +58,18 @@ function FeedCard({
   const [following, setFollowing] = useState(false);
   const [adding, setAdding] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   // Auto-advance through photos every 3s when there's no video and more
-  // than one image — same "slideshow" pattern as Instagram carousel posts.
+  // than one image. Restarts on every index change (including manual taps),
+  // so a manual navigation gets its own full 3s before advancing again.
   useEffect(() => {
     if (product.videoEmbedUrl || product.imageUrls.length <= 1) return;
     const timer = setInterval(() => {
       setImageIndex((i) => (i + 1) % product.imageUrls.length);
     }, 3000);
     return () => clearInterval(timer);
-  }, [product.videoEmbedUrl, product.imageUrls.length]);
+  }, [product.videoEmbedUrl, product.imageUrls.length, imageIndex]);
 
   async function logEvent(eventType: "like" | "unlike" | "save" | "unsave" | "add_to_cart") {
     const supabase = createClient();
@@ -161,8 +164,30 @@ function FeedCard({
           </div>
         )}
 
+        {/* Manual tap-to-navigate zones — left half = previous, right half =
+            next. Sit beneath the rail/hashtag/sound-toggle elements in DOM
+            order so those still receive clicks at their own position. */}
         {!product.videoEmbedUrl && product.imageUrls.length > 1 && (
-          <div className="pointer-events-none absolute left-0 right-0 top-3 flex justify-center gap-1.5">
+          <>
+            <button
+              aria-label="Previous photo"
+              onClick={() =>
+                setImageIndex(
+                  (i) => (i - 1 + product.imageUrls.length) % product.imageUrls.length
+                )
+              }
+              className="absolute inset-y-0 left-0 w-1/2"
+            />
+            <button
+              aria-label="Next photo"
+              onClick={() => setImageIndex((i) => (i + 1) % product.imageUrls.length)}
+              className="absolute inset-y-0 right-0 w-1/2"
+            />
+          </>
+        )}
+
+        {!product.videoEmbedUrl && product.imageUrls.length > 1 && (
+          <div className="pointer-events-none absolute bottom-10 left-0 right-0 flex justify-center gap-1.5">
             {product.imageUrls.map((_, i) => (
               <span
                 key={i}
@@ -237,6 +262,11 @@ function FeedCard({
               <path d="M12 21s-7.5-4.6-10-9.3C.6 8.2 2 4.8 5.3 4.1c2-.4 3.9.5 5 2.1a5.9 5.9 0 011.7-2C13.8 3 17 3.4 19 6c2 2.6 1.2 6-.7 8.3C15.8 17.7 12 21 12 21z" />
             </svg>
           </RailButton>
+          <RailButton onClick={() => setCommentsOpen(true)} label="Comment">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 5.5A2.5 2.5 0 016.5 3h11A2.5 2.5 0 0120 5.5v7A2.5 2.5 0 0117.5 15H11l-4 3.5V15H6.5A2.5 2.5 0 014 12.5v-7z" strokeLinejoin="round" />
+            </svg>
+          </RailButton>
           <RailButton onClick={toggleSave} active={saved} label="Save">
             <svg width="28" height="28" viewBox="0 0 24 24" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
               <path d="M6 3.5h12a1 1 0 011 1V21l-7-4-7 4V4.5a1 1 0 011-1z" />
@@ -280,6 +310,10 @@ function FeedCard({
           )}
         </button>
       </div>
+
+      {commentsOpen && (
+        <CommentsSheet productId={product.id} onClose={() => setCommentsOpen(false)} />
+      )}
     </div>
   );
 }
@@ -299,7 +333,7 @@ export function VerticalFeed({ products }: { products: FeedCardData[] }) {
   }
 
   return (
-    <div className="no-scrollbar h-full w-full snap-y snap-mandatory overflow-y-scroll">
+    <div className="no-scrollbar h-full w-full snap-y snap-mandatory overflow-y-scroll lg:mx-auto lg:max-w-[460px] lg:border-x lg:border-ink-800">
       {products.map((p) => (
         <FeedCard
           key={p.id}
