@@ -17,7 +17,10 @@ export default async function LivePage() {
   return (
     <main className="min-h-screen bg-ink-950 text-ink-50">
       <div className="safe-top mx-auto max-w-lg px-6 pt-8">
-        <h1 className="font-display text-2xl">Live</h1>
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-500" />
+          <h1 className="font-display text-2xl">Live</h1>
+        </div>
         <p className="mt-2 text-sm text-ink-400">
           No one is live right now. Livestream selling isn&rsquo;t built yet —
           this page is ready for it, but the actual video broadcast

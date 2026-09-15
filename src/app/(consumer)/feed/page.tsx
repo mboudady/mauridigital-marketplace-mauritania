@@ -18,6 +18,10 @@ function FeedTabs({ active }: { active: "for-you" | "following" }) {
       >
         Following
       </Link>
+      <Link href="/live" className="flex items-center gap-1 text-ink-500">
+        <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+        LIVE
+      </Link>
     </div>
   );
 }
