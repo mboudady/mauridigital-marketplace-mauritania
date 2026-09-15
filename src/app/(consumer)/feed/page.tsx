@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { VerticalFeed, type FeedCardData } from "@/components/VerticalFeed";
+import { OnboardingTutorial } from "@/components/OnboardingTutorial";
 
 function FeedTabs({ active }: { active: "for-you" | "following" }) {
   return (
@@ -126,9 +127,15 @@ export default async function FeedPage({
       display_order: number;
     }>;
     const video = media.find((m) => m.type === "video");
-    const hero =
-      media.find((m) => m.is_hero && m.type === "image") ??
-      media.find((m) => m.type === "image");
+    const images = media
+      .filter((m) => m.type === "image")
+      .sort((a, b) => {
+        // Hero first, then by display_order
+        if (a.is_hero && !b.is_hero) return -1;
+        if (!a.is_hero && b.is_hero) return 1;
+        return a.display_order - b.display_order;
+      })
+      .map((m) => m.url);
     const hashtags = ((p.product_hashtags ?? []) as Array<{ hashtags: { tag: string } | null }>)
       .map((ph) => ph.hashtags?.tag)
       .filter((t): t is string => !!t);
@@ -140,7 +147,7 @@ export default async function FeedPage({
       storeName:
         (p.merchants as unknown as { store_name: string } | null)
           ?.store_name ?? "",
-      heroImageUrl: hero?.url ?? null,
+      imageUrls: images,
       videoEmbedUrl: video?.url ?? null,
       hashtags,
     };
@@ -148,6 +155,7 @@ export default async function FeedPage({
 
   return (
     <div className="flex h-full flex-col bg-ink-950">
+      <OnboardingTutorial />
       <FeedTabs active={isFollowing ? "following" : "for-you"} />
       <div className="min-h-0 flex-1">
         <VerticalFeed products={cards} />

@@ -1,24 +1,13 @@
 import Link from "next/link";
+import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooter } from "@/components/MarketingFooter";
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-ink-950 text-ink-100">
-      <div className="mx-auto flex max-w-5xl flex-col px-6 pb-24 pt-10 sm:px-10">
-        <header className="flex items-center justify-between">
-          <span className="font-display text-xl tracking-tight">Souq</span>
-          <nav className="flex items-center gap-6 text-sm text-ink-100">
-            <Link href="/login" className="hover:text-ink-50">
-              Log in
-            </Link>
-            <Link
-              href="/login?role=merchant"
-              className="rounded bg-ink-50 px-4 py-2 text-ink-950 transition-colors hover:bg-ink-200"
-            >
-              Sell on Souq
-            </Link>
-          </nav>
-        </header>
+      <MarketingHeader />
 
+      <div className="mx-auto flex max-w-5xl flex-col px-6 pb-24 sm:px-10">
         <section className="mt-20 grid gap-12 sm:mt-32 sm:grid-cols-5 sm:items-end">
           <div className="sm:col-span-3">
             <h1 className="font-display text-5xl leading-[1.05] text-ink-50 sm:text-6xl">
@@ -42,10 +31,10 @@ export default function HomePage() {
                 Start browsing
               </Link>
               <Link
-                href="/login?role=merchant"
+                href="/for-merchants"
                 className="text-sm text-ink-100 underline decoration-ink-500 underline-offset-4 hover:text-ink-50"
               >
-                Open a store, free
+                Sell on Souq
               </Link>
             </div>
           </div>
@@ -73,7 +62,34 @@ export default function HomePage() {
             </dl>
           </div>
         </section>
+
+        <section className="mt-24 grid gap-6 sm:grid-cols-2">
+          <Link
+            href="/for-merchants"
+            className="rounded-lg border border-ink-700 p-6 transition-colors hover:border-ink-400"
+          >
+            <p className="text-xs uppercase tracking-wide text-ink-500">Sellers</p>
+            <p className="mt-1 font-display text-xl text-ink-50">Open a store</p>
+            <p className="mt-2 text-sm text-ink-400">
+              Free to join. Post products with photos or video. Pay only
+              when you sell.
+            </p>
+          </Link>
+          <Link
+            href="/for-affiliates"
+            className="rounded-lg border border-ink-700 p-6 transition-colors hover:border-ink-400"
+          >
+            <p className="text-xs uppercase tracking-wide text-ink-500">Creators</p>
+            <p className="mt-1 font-display text-xl text-ink-50">Earn as an affiliate</p>
+            <p className="mt-2 text-sm text-ink-400">
+              Promote products you like and earn commission on every sale
+              through your link.
+            </p>
+          </Link>
+        </section>
       </div>
+
+      <MarketingFooter />
     </main>
   );
 }

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html, body {
@@ -12,13 +12,13 @@ html, body {
 }
 
 body {
-  background-color: #08080A;
-  color: #F4F4F6;
+  background-color: #F8F8F6;
+  color: #0B0B0A;
 }
 
 ::selection {
-  background-color: #8A5CFF;
-  color: #08080A;
+  background-color: #0B0B0A;
+  color: #F8F8F6;
 }
 
 .safe-top {

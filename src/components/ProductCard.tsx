@@ -33,7 +33,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           </div>
         )}
         {product.hasVideo && (
-          <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-ink-950/80 text-ink-50">
+          <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
               <path d="M1 0.5L9 5L1 9.5V0.5Z" />
             </svg>

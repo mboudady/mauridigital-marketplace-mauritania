@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export type FeedCardData = {
   price_mru: number;
   storeName: string;
   merchantId: string;
-  heroImageUrl: string | null;
+  imageUrls: string[];
   videoEmbedUrl: string | null;
   hashtags: string[];
 };
@@ -34,9 +34,9 @@ function RailButton({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1 text-ink-50 drop-shadow-lg"
+      className="flex flex-col items-center gap-1 text-white drop-shadow-lg"
     >
-      <span className={active ? "text-ink-50" : ""}>{children}</span>
+      <span>{children}</span>
       {label && <span className="text-[10px]">{label}</span>}
     </button>
   );
@@ -56,6 +56,17 @@ function FeedCard({
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
+  // Auto-advance through photos every 3s when there's no video and more
+  // than one image — same "slideshow" pattern as Instagram carousel posts.
+  useEffect(() => {
+    if (product.videoEmbedUrl || product.imageUrls.length <= 1) return;
+    const timer = setInterval(() => {
+      setImageIndex((i) => (i + 1) % product.imageUrls.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [product.videoEmbedUrl, product.imageUrls.length]);
 
   async function logEvent(eventType: "like" | "unlike" | "save" | "unsave" | "add_to_cart") {
     const supabase = createClient();
@@ -135,9 +146,9 @@ function FeedCard({
             allowFullScreen
             className="absolute inset-0 h-full w-full border-0"
           />
-        ) : product.heroImageUrl ? (
+        ) : product.imageUrls[imageIndex] ? (
           <Image
-            src={product.heroImageUrl}
+            src={product.imageUrls[imageIndex]}
             alt={product.name}
             fill
             sizes="100vw"
@@ -150,13 +161,26 @@ function FeedCard({
           </div>
         )}
 
+        {!product.videoEmbedUrl && product.imageUrls.length > 1 && (
+          <div className="pointer-events-none absolute left-0 right-0 top-3 flex justify-center gap-1.5">
+            {product.imageUrls.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1 w-1 rounded-full ${
+                  i === imageIndex ? "bg-white" : "bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
 
         {/* Sound toggle */}
         {product.videoEmbedUrl && (
           <button
             onClick={onToggleSound}
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-ink-50 backdrop-blur"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur"
             aria-label={soundOn ? "Mute" : "Unmute"}
           >
             {soundOn ? (
@@ -180,7 +204,7 @@ function FeedCard({
               <Link
                 key={tag}
                 href={`/search?q=${encodeURIComponent("#" + tag)}`}
-                className="text-xs font-medium text-ink-50 drop-shadow"
+                className="text-xs font-medium text-white drop-shadow"
               >
                 #{tag}
               </Link>
@@ -193,14 +217,14 @@ function FeedCard({
           <div className="relative">
             <Link
               href={`/store/${product.merchantId}`}
-              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-ink-50 bg-ink-800 font-display text-sm text-ink-50"
+              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-ink-500 font-display text-sm text-white"
             >
               {product.storeName.charAt(0).toUpperCase()}
             </Link>
             <button
               onClick={toggleFollow}
-              className={`absolute -bottom-2 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full text-[11px] text-ink-50 ${
-                following ? "bg-ink-600" : "bg-ink-50"
+              className={`absolute -bottom-2 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full text-[11px] ${
+                following ? "bg-white/30 text-white" : "bg-white text-black"
               }`}
               aria-label={following ? "Unfollow" : "Follow"}
             >
@@ -224,8 +248,8 @@ function FeedCard({
       {/* Horizontal product bar, underneath the media */}
       <div className="flex shrink-0 items-center gap-3 border-t border-ink-800 bg-ink-900 px-3 py-2.5">
         <Link href={`/product/${product.id}`} className="relative h-11 w-11 shrink-0 overflow-hidden rounded bg-ink-800">
-          {product.heroImageUrl && (
-            <Image src={product.heroImageUrl} alt="" fill sizes="44px" className="object-cover" />
+          {product.imageUrls[0] && (
+            <Image src={product.imageUrls[0]} alt="" fill sizes="44px" className="object-cover" />
           )}
         </Link>
         <Link href={`/product/${product.id}`} className="min-w-0 flex-1">

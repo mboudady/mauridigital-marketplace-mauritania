@@ -76,15 +76,15 @@ export default async function MerchantProductsPage() {
                   </div>
                 )}
                 {hasVideo && (
-                  <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-ink-50">
+                  <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-white">
                     <svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor">
                       <path d="M1 0.5L9 5L1 9.5V0.5Z" />
                     </svg>
                   </span>
                 )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
-                  <p className="truncate text-[11px] text-ink-50">{p.name}</p>
-                  <p className="text-[10px] text-ink-300">
+                  <p className="truncate text-[11px] text-white">{p.name}</p>
+                  <p className="text-[10px] text-white/70">
                     {formatMRU(p.price_mru)} · {p.purchase_count} sold
                   </p>
                 </div>
