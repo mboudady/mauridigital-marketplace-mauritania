@@ -450,6 +450,138 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_post_hashtags: {
+        Row: {
+          hashtag_id: string
+          post_id: string
+        }
+        Insert: {
+          hashtag_id: string
+          post_id: string
+        }
+        Update: {
+          hashtag_id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_post_hashtags_hashtag_id_fkey"
+            columns: ["hashtag_id"]
+            isOneToOne: false
+            referencedRelation: "hashtags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_post_hashtags_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "creator_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_post_media: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_hero: boolean | null
+          post_id: string
+          type: string
+          url: string
+          video_external_id: string | null
+          video_provider: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_hero?: boolean | null
+          post_id: string
+          type: string
+          url: string
+          video_external_id?: string | null
+          video_provider?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_hero?: boolean | null
+          post_id?: string
+          type?: string
+          url?: string
+          video_external_id?: string | null
+          video_provider?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_post_media_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "creator_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          creator_id: string
+          deleted_at: string | null
+          enrollment_id: string
+          id: string
+          like_count: number | null
+          product_id: string
+          view_count: number | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          creator_id: string
+          deleted_at?: string | null
+          enrollment_id: string
+          id?: string
+          like_count?: number | null
+          product_id: string
+          view_count?: number | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          creator_id?: string
+          deleted_at?: string | null
+          enrollment_id?: string
+          id?: string
+          like_count?: number | null
+          product_id?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_posts_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_posts_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_posts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           created_at: string
@@ -1899,6 +2031,10 @@ export type Database = {
         Returns: number
       }
       confirm_delivery: { Args: { p_order_id: string }; Returns: undefined }
+      create_creator_post: {
+        Args: { p_product_id: string; p_caption: string | null }
+        Returns: string
+      }
       create_orders_from_cart: {
         Args: {
           p_delivery_address: string

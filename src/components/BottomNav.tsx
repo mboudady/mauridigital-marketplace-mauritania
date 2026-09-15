@@ -67,6 +67,7 @@ export function BottomNav() {
   const [cartCount, setCartCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMerchant, setIsMerchant] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -81,10 +82,11 @@ export function BottomNav() {
           setCartCount(0);
           setUnreadCount(0);
           setIsMerchant(false);
+          setIsCreator(false);
         }
         return;
       }
-      const [count, { count: notifCount }, { data: merchant }] = await Promise.all([
+      const [count, { count: notifCount }, { data: merchant }, { data: roles }] = await Promise.all([
         getCartCount(supabase, user.id),
         supabase
           .from("notifications")
@@ -92,11 +94,13 @@ export function BottomNav() {
           .eq("user_id", user.id)
           .eq("read", false),
         supabase.from("merchants").select("id").eq("user_id", user.id).maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", user.id),
       ]);
       if (active) {
         setCartCount(count);
         setUnreadCount(notifCount ?? 0);
         setIsMerchant(!!merchant);
+        setIsCreator(!!roles?.some((r) => r.role === "creator"));
       }
     }
 
@@ -109,7 +113,9 @@ export function BottomNav() {
   }, [pathname]);
 
   function handleCreate() {
-    router.push(isMerchant ? "/merchant/products/new" : "/onboarding");
+    if (isMerchant) router.push("/merchant/products/new");
+    else if (isCreator) router.push("/affiliate/post/new");
+    else router.push("/onboarding");
   }
 
   return (
@@ -133,7 +139,7 @@ export function BottomNav() {
 
         <button
           onClick={handleCreate}
-          aria-label={isMerchant ? "Add a product" : "Open a store"}
+          aria-label={isMerchant ? "Add a product" : isCreator ? "Create a post" : "Open a store"}
           className="flex h-9 w-12 items-center justify-center rounded-lg bg-ink-50 text-ink-950"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

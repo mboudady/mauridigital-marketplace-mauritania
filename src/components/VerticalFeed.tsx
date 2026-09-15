@@ -12,6 +12,7 @@ import { CommentsSheet } from "@/components/CommentsSheet";
 
 export type FeedCardData = {
   id: string;
+  productId: string;
   name: string;
   price_mru: number;
   storeName: string;
@@ -19,6 +20,7 @@ export type FeedCardData = {
   imageUrls: string[];
   videoEmbedUrl: string | null;
   hashtags: string[];
+  sourceLabel: string | null;
 };
 
 function RailButton({
@@ -58,6 +60,14 @@ function FeedCard({
   const [following, setFollowing] = useState(false);
   const [adding, setAdding] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [showPauseFlash, setShowPauseFlash] = useState(false);
+
+  function togglePause() {
+    setPaused((p) => !p);
+    setShowPauseFlash(true);
+    setTimeout(() => setShowPauseFlash(false), 500);
+  }
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   // Auto-advance through photos every 3s when there's no video and more
@@ -74,7 +84,7 @@ function FeedCard({
   async function logEvent(eventType: "like" | "unlike" | "save" | "unsave" | "add_to_cart") {
     const supabase = createClient();
     await logEventHelper(supabase, eventType, {
-      productId: product.id,
+      productId: product.productId,
       merchantId: product.merchantId,
     });
   }
@@ -94,10 +104,10 @@ function FeedCard({
       return;
     }
     if (saved) {
-      await supabase.from("saves").delete().eq("user_id", user.id).eq("product_id", product.id);
+      await supabase.from("saves").delete().eq("user_id", user.id).eq("product_id", product.productId);
       setSaved(false);
     } else {
-      await supabase.from("saves").insert({ user_id: user.id, product_id: product.id });
+      await supabase.from("saves").insert({ user_id: user.id, product_id: product.productId });
       setSaved(true);
     }
     await logEvent(saved ? "unsave" : "save");
@@ -131,7 +141,7 @@ function FeedCard({
       router.push("/login");
       return;
     }
-    await addToCart(supabase, user.id, product.id, null, 1);
+    await addToCart(supabase, user.id, product.productId, null, 1);
     await logEvent("add_to_cart");
     setTimeout(() => setAdding(false), 1200);
   }
@@ -141,14 +151,37 @@ function FeedCard({
       {/* Media area */}
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {product.videoEmbedUrl ? (
-          <iframe
-            key={soundOn ? "sound-on" : "sound-off"}
-            src={`${product.videoEmbedUrl}?autoplay=true&loop=true&muted=${!soundOn}&preload=true`}
-            loading="lazy"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 h-full w-full border-0"
-          />
+          <>
+            <iframe
+              key={`${soundOn ? "s1" : "s0"}-${paused ? "p1" : "p0"}`}
+              src={`${product.videoEmbedUrl}?autoplay=${!paused}&loop=true&muted=${!soundOn}&preload=true`}
+              loading="lazy"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 h-full w-full border-0"
+            />
+            <button
+              aria-label={paused ? "Play" : "Pause"}
+              onClick={togglePause}
+              className="absolute inset-0 h-full w-full"
+            />
+            {showPauseFlash && (
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-black/40 text-white">
+                  {paused ? (
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  ) : (
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="5" width="4" height="14" />
+                      <rect x="14" y="5" width="4" height="14" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         ) : product.imageUrls[imageIndex] ? (
           <Image
             src={product.imageUrls[imageIndex]}
@@ -200,6 +233,12 @@ function FeedCard({
         )}
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
+
+        {product.sourceLabel && (
+          <span className="absolute left-3 top-3 rounded-full bg-black/40 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur">
+            {product.sourceLabel}
+          </span>
+        )}
 
         {/* Sound toggle */}
         {product.videoEmbedUrl && (
@@ -277,12 +316,12 @@ function FeedCard({
 
       {/* Horizontal product bar, underneath the media */}
       <div className="flex shrink-0 items-center gap-3 border-t border-ink-800 bg-ink-900 px-3 py-2.5">
-        <Link href={`/product/${product.id}`} className="relative h-11 w-11 shrink-0 overflow-hidden rounded bg-ink-800">
+        <Link href={`/product/${product.productId}`} className="relative h-11 w-11 shrink-0 overflow-hidden rounded bg-ink-800">
           {product.imageUrls[0] && (
             <Image src={product.imageUrls[0]} alt="" fill sizes="44px" className="object-cover" />
           )}
         </Link>
-        <Link href={`/product/${product.id}`} className="min-w-0 flex-1">
+        <Link href={`/product/${product.productId}`} className="min-w-0 flex-1">
           <p className="truncate text-sm text-ink-50">{product.name}</p>
           <p className="font-display text-sm text-ink-100">{formatMRU(product.price_mru)}</p>
         </Link>
@@ -312,7 +351,7 @@ function FeedCard({
       </div>
 
       {commentsOpen && (
-        <CommentsSheet productId={product.id} onClose={() => setCommentsOpen(false)} />
+        <CommentsSheet productId={product.productId} onClose={() => setCommentsOpen(false)} />
       )}
     </div>
   );

@@ -36,6 +36,8 @@ function FeedTabs({ active }: { active: "for-you" | "following" }) {
   );
 }
 
+type ScoredCard = FeedCardData & { score: number; merchantIdForFollow: string; createdAt: string };
+
 export default async function FeedPage({
   searchParams,
 }: {
@@ -63,6 +65,15 @@ export default async function FeedPage({
     );
   }
 
+  // "Merchants should only see affiliate creator posts, not other
+  // merchants' products" — check the viewer's role to decide which
+  // content sources are eligible.
+  let isMerchantViewer = false;
+  if (user) {
+    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+    isMerchantViewer = !!roles?.some((r) => r.role === "merchant");
+  }
+
   let followedMerchantIds: string[] = [];
   if (isFollowing && user) {
     const { data: follows } = await supabase
@@ -71,19 +82,41 @@ export default async function FeedPage({
       .eq("follower_id", user.id);
     followedMerchantIds = (follows ?? []).map((f) => f.merchant_id);
   }
+  const followFilterIds = followedMerchantIds.length
+    ? followedMerchantIds
+    : ["00000000-0000-0000-0000-000000000000"];
 
-  let query = supabase
-    .from("products")
-    .select(
-      "id, name, price_mru, merchant_id, purchase_count, like_count, view_count, created_at, merchants(store_name), product_media(url, is_hero, type, display_order), product_hashtags(hashtags(tag))"
-    );
-
-  if (isFollowing) {
-    query = query.in("merchant_id", followedMerchantIds.length ? followedMerchantIds : ["00000000-0000-0000-0000-000000000000"]);
+  // --- Merchant-authored products (hidden entirely from merchant viewers) ---
+  let productRows: any[] = [];
+  if (!isMerchantViewer) {
+    let query = supabase
+      .from("products")
+      .select(
+        "id, name, price_mru, merchant_id, purchase_count, like_count, view_count, created_at, merchants(store_name), product_media(url, is_hero, type, display_order), product_hashtags(hashtags(tag))"
+      );
+    if (isFollowing) query = query.in("merchant_id", followFilterIds);
+    const { data } = await query
+      .order("purchase_count", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(60);
+    productRows = data ?? [];
   }
 
-  const { data: products } = await query
-    .order("purchase_count", { ascending: false })
+  // --- Affiliate creator posts (visible to everyone) ---
+  let creatorPostQuery = supabase
+    .from("creator_posts")
+    .select(
+      "id, caption, view_count, like_count, created_at, product_id, creator_id, products(price_mru, merchant_id, merchants(store_name)), creator_post_media(url, is_hero, type, display_order), creator_post_hashtags(hashtags(tag))"
+    );
+  if (isFollowing) {
+    // "Following" for creator posts = posts about products from merchants you follow
+    creatorPostQuery = creatorPostQuery.filter(
+      "products.merchant_id",
+      "in",
+      `(${followFilterIds.join(",")})`
+    );
+  }
+  const { data: creatorPostRows } = await creatorPostQuery
     .order("created_at", { ascending: false })
     .limit(60);
 
@@ -102,53 +135,31 @@ export default async function FeedPage({
     for (const e of recentEvents ?? []) {
       if (e.event_type === "like" && e.product_id) likedProductIds.add(e.product_id);
       if (e.event_type === "purchase" && e.merchant_id) purchasedMerchantIds.add(e.merchant_id);
-      if (
-        (e.event_type === "product_view" || e.event_type === "add_to_cart") &&
-        e.merchant_id
-      ) {
+      if ((e.event_type === "product_view" || e.event_type === "add_to_cart") && e.merchant_id) {
         engagedMerchantIds.add(e.merchant_id);
       }
     }
   }
 
   const now = Date.now();
-  const scored = (products ?? []).map((p) => {
-    let score =
-      (p.purchase_count ?? 0) * 5 +
-      (p.like_count ?? 0) * 1 +
-      (p.view_count ?? 0) * 0.1;
 
-    if (!isFollowing) {
-      const ageDays = (now - new Date(p.created_at).getTime()) / (1000 * 60 * 60 * 24);
-      score += Math.max(0, 5 - ageDays * 0.5);
-      if (purchasedMerchantIds.has(p.merchant_id)) score += 8;
-      if (engagedMerchantIds.has(p.merchant_id)) score += 3;
-      if (likedProductIds.has(p.id)) score -= 20;
-    } else {
-      score = new Date(p.created_at).getTime(); // Following: strictly newest-first
-    }
+  function scoreOf(createdAt: string, merchantId: string, purchase: number, like: number, view: number, id: string) {
+    if (isFollowing) return new Date(createdAt).getTime();
+    let score = purchase * 5 + like * 1 + view * 0.1;
+    const ageDays = (now - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24);
+    score += Math.max(0, 5 - ageDays * 0.5);
+    if (purchasedMerchantIds.has(merchantId)) score += 8;
+    if (engagedMerchantIds.has(merchantId)) score += 3;
+    if (likedProductIds.has(id)) score -= 20;
+    return score;
+  }
 
-    return { p, score };
-  });
-
-  scored.sort((a, b) => b.score - a.score);
-
-  const cards: FeedCardData[] = scored.slice(0, 30).map(({ p }) => {
-    const media = (p.product_media ?? []) as Array<{
-      url: string;
-      is_hero: boolean | null;
-      type: string;
-      display_order: number;
-    }>;
+  const productCards: ScoredCard[] = productRows.map((p) => {
+    const media = (p.product_media ?? []) as Array<{ url: string; is_hero: boolean | null; type: string; display_order: number }>;
     const video = media.find((m) => m.type === "video");
     const images = media
       .filter((m) => m.type === "image")
-      .sort((a, b) => {
-        // Hero first, then by display_order
-        if (a.is_hero && !b.is_hero) return -1;
-        if (!a.is_hero && b.is_hero) return 1;
-        return a.display_order - b.display_order;
-      })
+      .sort((a, b) => (a.is_hero && !b.is_hero ? -1 : !a.is_hero && b.is_hero ? 1 : a.display_order - b.display_order))
       .map((m) => m.url);
     const hashtags = ((p.product_hashtags ?? []) as Array<{ hashtags: { tag: string } | null }>)
       .map((ph) => ph.hashtags?.tag)
@@ -158,14 +169,51 @@ export default async function FeedPage({
       name: p.name,
       price_mru: p.price_mru,
       merchantId: p.merchant_id,
-      storeName:
-        (p.merchants as unknown as { store_name: string } | null)
-          ?.store_name ?? "",
+      merchantIdForFollow: p.merchant_id,
+      storeName: (p.merchants as unknown as { store_name: string } | null)?.store_name ?? "",
       imageUrls: images,
       videoEmbedUrl: video?.url ?? null,
       hashtags,
+      sourceLabel: null,
+      productId: p.id,
+      createdAt: p.created_at,
+      score: scoreOf(p.created_at, p.merchant_id, p.purchase_count ?? 0, p.like_count ?? 0, p.view_count ?? 0, p.id),
     };
   });
+
+  const creatorCards: ScoredCard[] = (creatorPostRows ?? [])
+    .filter((cp: any) => cp.products) // guard against a deleted/inaccessible product
+    .map((cp: any) => {
+      const product = cp.products;
+      const merchantId = product.merchant_id as string;
+      const media = (cp.creator_post_media ?? []) as Array<{ url: string; is_hero: boolean | null; type: string; display_order: number }>;
+      const video = media.find((m) => m.type === "video");
+      const images = media
+        .filter((m) => m.type === "image")
+        .sort((a, b) => (a.is_hero && !b.is_hero ? -1 : !a.is_hero && b.is_hero ? 1 : a.display_order - b.display_order))
+        .map((m) => m.url);
+      const hashtags = ((cp.creator_post_hashtags ?? []) as Array<{ hashtags: { tag: string } | null }>)
+        .map((ph) => ph.hashtags?.tag)
+        .filter((t): t is string => !!t);
+      return {
+        id: `cp-${cp.id}`,
+        name: cp.caption || "Affiliate post",
+        price_mru: product.price_mru,
+        merchantId,
+        merchantIdForFollow: merchantId,
+        storeName: (product.merchants as unknown as { store_name: string } | null)?.store_name ?? "",
+        imageUrls: images,
+        videoEmbedUrl: video?.url ?? null,
+        hashtags,
+        sourceLabel: "Affiliate post",
+        productId: cp.product_id,
+        createdAt: cp.created_at,
+        score: scoreOf(cp.created_at, merchantId, 0, cp.like_count ?? 0, cp.view_count ?? 0, cp.product_id),
+      };
+    });
+
+  const merged = [...productCards, ...creatorCards].sort((a, b) => b.score - a.score).slice(0, 30);
+  const cards: FeedCardData[] = merged.map(({ score, createdAt, ...card }) => card);
 
   return (
     <div className="flex h-full flex-col bg-ink-950">

@@ -44,14 +44,16 @@ export default async function ProfilePage() {
 
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: roles }, { data: merchant }] = await Promise.all([
+  const [{ data: profile }, { data: roles }, { data: merchant }, { count: enrollmentCount }] = await Promise.all([
     supabase.from("user_profiles").select("display_name").eq("user_id", user.id).maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", user.id),
     supabase.from("merchants").select("id, store_name").eq("user_id", user.id).maybeSingle(),
+    supabase.from("affiliate_enrollments").select("*", { count: "exact", head: true }).eq("creator_id", user.id),
   ]);
 
   const roleSet = new Set((roles ?? []).map((r) => r.role));
   const isAdmin = roleSet.has("admin") || roleSet.has("moderator");
+  const hasAffiliateActivity = (enrollmentCount ?? 0) > 0;
 
   return (
     <main className="min-h-screen bg-ink-950 text-ink-50">
@@ -124,8 +126,8 @@ export default async function ProfilePage() {
           />
           <Row
             href="/affiliate"
-            label="Affiliate earnings"
-            sub="Apply to programs, track commissions"
+            label={hasAffiliateActivity ? "Affiliate earnings" : "Become an affiliate"}
+            sub={hasAffiliateActivity ? "Apply to programs, track commissions" : "Earn commission promoting products"}
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" strokeLinecap="round" />
