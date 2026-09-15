@@ -58,7 +58,7 @@ export function MessageSellerButton({
     <button
       onClick={startConversation}
       disabled={busy}
-      className="rounded border border-indigo-600 px-4 py-1.5 text-sm text-sand-200 hover:bg-indigo-800 disabled:opacity-60"
+      className="rounded border border-ink-600 px-4 py-1.5 text-sm text-ink-100 hover:bg-ink-850 disabled:opacity-60"
     >
       {busy ? "Opening…" : "Message seller"}
     </button>

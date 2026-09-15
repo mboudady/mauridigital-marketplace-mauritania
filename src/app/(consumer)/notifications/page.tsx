@@ -53,11 +53,11 @@ export default function NotificationsPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl text-sand-50">Notifications</h1>
-          <div className="flex gap-3 text-xs text-sand-400">
+          <h1 className="font-display text-2xl text-ink-50">Notifications</h1>
+          <div className="flex gap-3 text-xs text-ink-400">
             <Link href="/messages" className="underline">
               Messages
             </Link>
@@ -71,17 +71,17 @@ export default function NotificationsPage() {
         </div>
 
         {!loading && notifications.length === 0 && (
-          <p className="mt-10 text-center text-sand-400">Nothing yet.</p>
+          <p className="mt-10 text-center text-ink-400">Nothing yet.</p>
         )}
 
-        <ul className="mt-6 divide-y divide-indigo-700">
+        <ul className="mt-6 divide-y divide-ink-800">
           {notifications.map((n) => {
             const href = linkFor(n);
             const content = (
               <div className={`py-3 ${n.read ? "opacity-70" : ""}`}>
-                <p className="text-sm text-sand-50">{n.title}</p>
-                {n.body && <p className="text-xs text-sand-400">{n.body}</p>}
-                <p className="mt-1 text-[10px] text-sand-500">
+                <p className="text-sm text-ink-50">{n.title}</p>
+                {n.body && <p className="text-xs text-ink-400">{n.body}</p>}
+                <p className="mt-1 text-[10px] text-ink-500">
                   {new Date(n.created_at).toLocaleString()}
                 </p>
               </div>

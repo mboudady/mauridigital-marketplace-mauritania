@@ -30,8 +30,8 @@ export default async function AdminDashboardPage() {
 
   if (!isAdmin) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-sand-50 text-indigo-900">
-        <p className="text-sm text-sand-500">
+      <main className="flex min-h-screen items-center justify-center bg-ink-950 text-ink-50">
+        <p className="text-sm text-ink-500">
           This account doesn&rsquo;t have admin access.
         </p>
       </main>
@@ -44,19 +44,19 @@ export default async function AdminDashboardPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-4xl">
         <h1 className="font-display text-3xl">Merchants</h1>
-        <p className="mt-1 text-sm text-sand-500">
+        <p className="mt-1 text-sm text-ink-500">
           {merchants?.length ?? 0} total ·{" "}
-          <a href="/admin/moderation" className="text-indigo-600 underline">
+          <a href="/admin/moderation" className="text-spark-400 underline">
             Moderation queue
           </a>
         </p>
 
         <table className="mt-8 w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-sand-300 text-sand-500">
+            <tr className="border-b border-ink-600 text-ink-500">
               <th className="py-2 font-medium">Store</th>
               <th className="py-2 font-medium">Category</th>
               <th className="py-2 font-medium">Status</th>
@@ -66,15 +66,15 @@ export default async function AdminDashboardPage() {
           </thead>
           <tbody>
             {merchants?.map((m) => (
-              <tr key={m.id} className="border-b border-sand-200">
+              <tr key={m.id} className="border-b border-ink-700">
                 <td className="py-3">{m.store_name}</td>
-                <td className="py-3 text-sand-600">{m.category}</td>
+                <td className="py-3 text-ink-300">{m.category}</td>
                 <td className="py-3">
                   <span
                     className={
                       m.verification_status === "verified"
-                        ? "text-indigo-500"
-                        : "text-sand-500"
+                        ? "text-spark-400"
+                        : "text-ink-500"
                     }
                   >
                     {m.verification_status}
@@ -87,7 +87,7 @@ export default async function AdminDashboardPage() {
                       <input type="hidden" name="merchantId" value={m.id} />
                       <button
                         type="submit"
-                        className="rounded border border-indigo-300 px-3 py-1 text-xs text-indigo-600 hover:bg-indigo-50"
+                        className="rounded border border-ink-600 px-3 py-1 text-xs text-spark-400 hover:bg-ink-800"
                       >
                         Verify
                       </button>
@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
             ))}
             {!merchants?.length && (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-sand-400">
+                <td colSpan={5} className="py-8 text-center text-ink-400">
                   No merchants yet.
                 </td>
               </tr>

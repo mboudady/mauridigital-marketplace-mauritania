@@ -33,7 +33,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isAuthRoute = path.startsWith("/login") || path.startsWith("/auth");
+  // "/auth/logout" and "/auth/callback" must never be preempted by the
+  // redirect-if-already-logged-in rule below — they manage their own
+  // redirects (logout needs to actually run signOut() first).
+  const isAuthRedirectRoute = path === "/" || path === "/login";
   // Feed, search, and individual product pages are browsable without an
   // account. Login is only required at the point of commitment: cart,
   // checkout, orders, and the merchant/admin back-offices.
@@ -47,7 +50,8 @@ export async function updateSession(request: NextRequest) {
     path.startsWith("/messages") ||
     path.startsWith("/notifications") ||
     path.startsWith("/saved") ||
-    path.startsWith("/affiliate");
+    path.startsWith("/affiliate") ||
+    path.startsWith("/profile");
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
@@ -56,7 +60,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthRoute) {
+  if (user && isAuthRedirectRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/feed";
     return NextResponse.redirect(url);

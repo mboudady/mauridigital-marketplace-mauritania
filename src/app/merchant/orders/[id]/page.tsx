@@ -126,51 +126,51 @@ export default function MerchantOrderDetailPage({
 
   if (!order) {
     return (
-      <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900" />
+      <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50" />
     );
   }
 
   const action = NEXT_ACTION[order.status];
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-xl">
         <Link
           href="/merchant/orders"
-          className="text-xs text-sand-500 hover:text-indigo-600"
+          className="text-xs text-ink-500 hover:text-spark-400"
         >
           ← All orders
         </Link>
         <h1 className="mt-2 font-display text-3xl">{order.order_number}</h1>
-        <p className="mt-1 text-sm capitalize text-sand-500">
+        <p className="mt-1 text-sm capitalize text-ink-500">
           {order.status}
         </p>
 
         {refund && (
-          <div className="mt-6 rounded border border-clay-400 bg-clay-400/10 p-4">
-            <p className="text-sm font-medium text-clay-600">
+          <div className="mt-6 rounded border border-red-400 bg-red-400/10 p-4">
+            <p className="text-sm font-medium text-red-400">
               Refund requested by {refund.requested_by_role}
             </p>
-            <p className="mt-1 text-sm text-indigo-800">{refund.reason}</p>
+            <p className="mt-1 text-sm text-ink-100">{refund.reason}</p>
             <p className="mt-1 text-sm">{formatMRU(refund.amount_mru)}</p>
             <input
               value={refundResponse}
               onChange={(e) => setRefundResponse(e.target.value)}
               placeholder="Optional note to the customer"
-              className="mt-3 w-full rounded border border-sand-300 px-3 py-1.5 text-sm"
+              className="mt-3 w-full rounded border border-ink-600 px-3 py-1.5 text-sm"
             />
             <div className="mt-3 flex gap-2">
               <button
                 onClick={() => respondToRefund(true)}
                 disabled={busy}
-                className="rounded bg-indigo-600 px-3 py-1.5 text-xs text-sand-50 hover:bg-indigo-500 disabled:opacity-60"
+                className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 hover:bg-spark-400 disabled:opacity-60"
               >
                 Approve refund
               </button>
               <button
                 onClick={() => respondToRefund(false)}
                 disabled={busy}
-                className="rounded border border-sand-300 px-3 py-1.5 text-xs hover:bg-sand-100 disabled:opacity-60"
+                className="rounded border border-ink-600 px-3 py-1.5 text-xs hover:bg-ink-800 disabled:opacity-60"
               >
                 Reject
               </button>
@@ -178,12 +178,12 @@ export default function MerchantOrderDetailPage({
           </div>
         )}
 
-        <ul className="mt-6 divide-y divide-sand-200 border-y border-sand-200">
+        <ul className="mt-6 divide-y divide-ink-800 border-y border-ink-700">
           {order.order_items.map((item, i) => (
             <li key={i} className="flex items-center justify-between py-3">
               <div>
                 <p className="text-sm">{item.products?.name}</p>
-                <p className="text-xs text-sand-500">
+                <p className="text-xs text-ink-500">
                   {item.quantity} × {formatMRU(item.price_per_unit_mru)}
                 </p>
               </div>
@@ -193,16 +193,16 @@ export default function MerchantOrderDetailPage({
         </ul>
 
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm text-sand-500">Total (cash on delivery)</span>
+          <span className="text-sm text-ink-500">Total (cash on delivery)</span>
           <span className="font-display text-lg">
             {formatMRU(order.total_mru)}
           </span>
         </div>
 
-        <div className="mt-6 rounded border border-sand-200 bg-white p-4 text-sm">
+        <div className="mt-6 rounded border border-ink-700 bg-ink-850 p-4 text-sm">
           <p>{order.delivery_address}</p>
-          <p className="text-sand-500">{order.delivery_city}</p>
-          <p className="text-sand-500">{order.delivery_phone}</p>
+          <p className="text-ink-500">{order.delivery_city}</p>
+          <p className="text-ink-500">{order.delivery_phone}</p>
         </div>
 
         {action && (
@@ -212,13 +212,13 @@ export default function MerchantOrderDetailPage({
                 value={trackingNote}
                 onChange={(e) => setTrackingNote(e.target.value)}
                 placeholder="Tracking note (courier, tracking number…)"
-                className="mb-3 w-full rounded border border-sand-300 px-3 py-2 text-sm"
+                className="mb-3 w-full rounded border border-ink-600 px-3 py-2 text-sm"
               />
             )}
             <button
               onClick={() => advanceStatus(action.next)}
               disabled={busy}
-              className="w-full rounded bg-indigo-600 px-4 py-2.5 text-sm font-medium text-sand-50 hover:bg-indigo-500 disabled:opacity-60"
+              className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 hover:bg-spark-400 disabled:opacity-60"
             >
               {busy ? "Updating…" : action.label}
             </button>
@@ -226,7 +226,7 @@ export default function MerchantOrderDetailPage({
               <button
                 onClick={() => advanceStatus("cancelled")}
                 disabled={busy}
-                className="mt-2 w-full rounded border border-sand-300 px-4 py-2 text-sm hover:bg-sand-100 disabled:opacity-60"
+                className="mt-2 w-full rounded border border-ink-600 px-4 py-2 text-sm hover:bg-ink-800 disabled:opacity-60"
               >
                 Cancel order
               </button>
@@ -234,7 +234,7 @@ export default function MerchantOrderDetailPage({
           </div>
         )}
 
-        {error && <p className="mt-3 text-sm text-clay-500">{error}</p>}
+        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
       </div>
     </main>
   );

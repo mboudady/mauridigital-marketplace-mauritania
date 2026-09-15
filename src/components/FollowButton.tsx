@@ -59,8 +59,8 @@ export function FollowButton({ merchantId }: { merchantId: string }) {
       disabled={busy}
       className={`rounded px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
         following
-          ? "border border-indigo-500 text-sand-200 hover:bg-indigo-800"
-          : "bg-clay-500 text-sand-50 hover:bg-clay-400"
+          ? "border border-spark-500 text-ink-100 hover:bg-ink-850"
+          : "bg-spark-500 text-ink-50 hover:bg-spark-400"
       }`}
     >
       {following ? "Following" : "Follow"}

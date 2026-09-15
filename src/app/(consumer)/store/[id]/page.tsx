@@ -51,17 +51,17 @@ export default async function StorePage({
   });
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-5xl px-6 pt-8 sm:px-10">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs uppercase tracking-widest text-sand-500">
+            <p className="text-xs uppercase tracking-widest text-ink-500">
               {merchant.category}
             </p>
-            <h1 className="mt-1 font-display text-2xl text-sand-50">
+            <h1 className="mt-1 font-display text-2xl text-ink-50">
               {merchant.store_name}
             </h1>
-            <p className="mt-1 text-sm text-sand-400">
+            <p className="mt-1 text-sm text-ink-400">
               {followerCount ?? 0} followers
               {merchant.rating_count ? ` · ★ ${merchant.rating?.toFixed(1)}` : ""}
               {merchant.verification_status === "verified" ? " · Verified" : ""}
@@ -71,7 +71,7 @@ export default async function StorePage({
         </div>
 
         {merchant.description && (
-          <p className="mt-4 max-w-lg text-sm text-sand-300">
+          <p className="mt-4 max-w-lg text-sm text-ink-300">
             {merchant.description}
           </p>
         )}
@@ -82,7 +82,7 @@ export default async function StorePage({
           ))}
         </div>
         {cards.length === 0 && (
-          <p className="mt-10 text-center text-sand-500">
+          <p className="mt-10 text-center text-ink-500">
             No products yet.
           </p>
         )}

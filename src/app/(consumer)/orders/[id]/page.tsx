@@ -46,20 +46,20 @@ export default async function OrderDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
         {placed === "1" && (
-          <div className="mb-6 rounded border border-indigo-600 bg-indigo-800 p-4 text-sm text-sand-200">
+          <div className="mb-6 rounded border border-ink-600 bg-ink-850 p-4 text-sm text-ink-100">
             Order placed! You&rsquo;ll pay {formatMRU(order.total_mru)} in
             cash on delivery.
           </div>
         )}
 
-        <p className="text-xs uppercase tracking-widest text-sand-500">
+        <p className="text-xs uppercase tracking-widest text-ink-500">
           {(order.merchants as unknown as { store_name: string } | null)
             ?.store_name}
         </p>
-        <h1 className="mt-1 font-display text-2xl text-sand-50">
+        <h1 className="mt-1 font-display text-2xl text-ink-50">
           {order.order_number}
         </h1>
 
@@ -69,30 +69,30 @@ export default async function OrderDetailPage({
               <div key={step} className="flex flex-1 items-center">
                 <div
                   className={`h-1.5 flex-1 rounded ${
-                    i <= currentStepIndex ? "bg-clay-500" : "bg-indigo-700"
+                    i <= currentStepIndex ? "bg-spark-500" : "bg-ink-800"
                   }`}
                 />
               </div>
             ))}
           </div>
         )}
-        <p className="mt-2 text-xs capitalize text-sand-400">
+        <p className="mt-2 text-xs capitalize text-ink-400">
           {order.status}
         </p>
 
-        <ul className="mt-6 divide-y divide-indigo-700 border-y border-indigo-700">
+        <ul className="mt-6 divide-y divide-ink-800 border-y border-ink-700">
           {(order.order_items ?? []).map((item, i) => (
             <li key={i} className="flex items-center justify-between py-3">
               <div>
-                <p className="text-sm text-sand-100">
+                <p className="text-sm text-ink-100">
                   {(item.products as unknown as { name: string } | null)
                     ?.name}
                 </p>
-                <p className="text-xs text-sand-400">
+                <p className="text-xs text-ink-400">
                   {item.quantity} × {formatMRU(item.price_per_unit_mru)}
                 </p>
               </div>
-              <p className="text-sm text-sand-100">
+              <p className="text-sm text-ink-100">
                 {formatMRU(item.total_mru)}
               </p>
             </li>
@@ -100,14 +100,14 @@ export default async function OrderDetailPage({
         </ul>
 
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm text-sand-300">Total (cash on delivery)</span>
-          <span className="font-display text-lg text-sand-50">
+          <span className="text-sm text-ink-300">Total (cash on delivery)</span>
+          <span className="font-display text-lg text-ink-50">
             {formatMRU(order.total_mru)}
           </span>
         </div>
 
-        <div className="mt-6 rounded border border-indigo-700 bg-indigo-800 p-4 text-sm text-sand-300">
-          <p className="text-sand-100">Delivery details</p>
+        <div className="mt-6 rounded border border-ink-700 bg-ink-850 p-4 text-sm text-ink-300">
+          <p className="text-ink-100">Delivery details</p>
           <p className="mt-1">{order.delivery_address}</p>
           <p>{order.delivery_city}</p>
           <p>{order.delivery_phone}</p>
@@ -121,7 +121,7 @@ export default async function OrderDetailPage({
               .filter((item) => !reviewedProductIds.includes(item.product_id))
               .map((item) => (
                 <div key={item.product_id}>
-                  <p className="mb-2 text-sm text-sand-300">
+                  <p className="mb-2 text-sm text-ink-300">
                     Review{" "}
                     {(item.products as unknown as { name: string } | null)?.name}
                   </p>
@@ -137,7 +137,7 @@ export default async function OrderDetailPage({
 
         <Link
           href="/orders"
-          className="mt-6 inline-block text-xs text-sand-500 hover:text-sand-300"
+          className="mt-6 inline-block text-xs text-ink-500 hover:text-ink-300"
         >
           ← All orders
         </Link>

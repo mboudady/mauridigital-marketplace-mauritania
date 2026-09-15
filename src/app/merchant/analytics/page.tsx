@@ -104,10 +104,10 @@ export default async function MerchantAnalyticsPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-3xl">
         <h1 className="font-display text-3xl">Analytics</h1>
-        <p className="mt-1 text-sm text-sand-500">Last 30 days</p>
+        <p className="mt-1 text-sm text-ink-500">Last 30 days</p>
 
         <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
@@ -116,20 +116,20 @@ export default async function MerchantAnalyticsPage() {
             { label: "Avg order value", value: formatMRU(avgOrderValue) },
             { label: "Refunded", value: refundedCount },
           ].map((s) => (
-            <div key={s.label} className="rounded border border-sand-200 bg-white p-4">
-              <dt className="text-xs text-sand-500">{s.label}</dt>
+            <div key={s.label} className="rounded border border-ink-700 bg-ink-850 p-4">
+              <dt className="text-xs text-ink-500">{s.label}</dt>
               <dd className="mt-1 font-display text-xl">{s.value}</dd>
             </div>
           ))}
         </dl>
 
         <section className="mt-10">
-          <h2 className="text-sm font-medium text-sand-700">Sales, last 14 days</h2>
-          <div className="mt-3 flex h-32 items-end gap-1 rounded border border-sand-200 bg-white p-4">
+          <h2 className="text-sm font-medium text-ink-300">Sales, last 14 days</h2>
+          <div className="mt-3 flex h-32 items-end gap-1 rounded border border-ink-700 bg-ink-850 p-4">
             {days.map((d) => (
               <div key={d} className="flex flex-1 flex-col items-center gap-1">
                 <div
-                  className="w-full rounded-sm bg-indigo-500"
+                  className="w-full rounded-sm bg-ink-8000"
                   style={{
                     height: `${Math.max(4, (gmvByDay[d] / maxDayGmv) * 96)}px`,
                   }}
@@ -138,27 +138,27 @@ export default async function MerchantAnalyticsPage() {
               </div>
             ))}
           </div>
-          <p className="mt-1 text-xs text-sand-400">
+          <p className="mt-1 text-xs text-ink-400">
             {days[0]} → {days[days.length - 1]}
           </p>
         </section>
 
         <section className="mt-10">
-          <h2 className="text-sm font-medium text-sand-700">
+          <h2 className="text-sm font-medium text-ink-300">
             Conversion funnel (30d)
           </h2>
-          <div className="mt-3 space-y-2 rounded border border-sand-200 bg-white p-4">
+          <div className="mt-3 space-y-2 rounded border border-ink-700 bg-ink-850 p-4">
             {funnel.map((f, i) => {
               const pct = funnel[0].value ? (f.value / funnel[0].value) * 100 : 0;
               return (
                 <div key={f.label}>
-                  <div className="flex justify-between text-xs text-sand-500">
+                  <div className="flex justify-between text-xs text-ink-500">
                     <span>{f.label}</span>
                     <span>{f.value}</span>
                   </div>
-                  <div className="mt-1 h-2 w-full rounded-full bg-sand-100">
+                  <div className="mt-1 h-2 w-full rounded-full bg-ink-800">
                     <div
-                      className="h-2 rounded-full bg-clay-500"
+                      className="h-2 rounded-full bg-spark-500"
                       style={{ width: `${Math.max(2, pct)}%` }}
                     />
                   </div>
@@ -169,16 +169,16 @@ export default async function MerchantAnalyticsPage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-sm font-medium text-sand-700">Top products (30d revenue)</h2>
-          <ul className="mt-3 divide-y divide-sand-200 rounded border border-sand-200 bg-white">
+          <h2 className="text-sm font-medium text-ink-300">Top products (30d revenue)</h2>
+          <ul className="mt-3 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
             {topProducts.length === 0 && (
-              <li className="p-4 text-sm text-sand-400">No sales yet.</li>
+              <li className="p-4 text-sm text-ink-400">No sales yet.</li>
             )}
             {topProducts.map((p) => (
               <li key={p.id} className="flex items-center justify-between p-4 text-sm">
                 <div>
                   <p>{p.name}</p>
-                  <p className="text-xs text-sand-500">
+                  <p className="text-xs text-ink-500">
                     {p.view_count} views · {p.purchase_count} sold
                   </p>
                 </div>

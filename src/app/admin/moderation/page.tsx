@@ -79,13 +79,13 @@ export default function ModerationPage() {
   }
 
   if (isAdmin === null) {
-    return <main className="min-h-screen bg-sand-50" />;
+    return <main className="min-h-screen bg-ink-950" />;
   }
 
   if (!isAdmin) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-sand-50 text-indigo-900">
-        <p className="text-sm text-sand-500">
+      <main className="flex min-h-screen items-center justify-center bg-ink-950 text-ink-50">
+        <p className="text-sm text-ink-500">
           This account doesn&rsquo;t have moderation access.
         </p>
       </main>
@@ -93,15 +93,15 @@ export default function ModerationPage() {
   }
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-3xl">
         <h1 className="font-display text-3xl">Moderation queue</h1>
-        <p className="mt-1 text-sm text-sand-500">
+        <p className="mt-1 text-sm text-ink-500">
           {reports.length} pending report{reports.length === 1 ? "" : "s"}
         </p>
 
         {reports.length === 0 ? (
-          <p className="mt-10 text-center text-sand-400">
+          <p className="mt-10 text-center text-ink-400">
             Nothing waiting for review.
           </p>
         ) : (
@@ -109,22 +109,22 @@ export default function ModerationPage() {
             {reports.map((r) => (
               <li
                 key={r.id}
-                className="rounded border border-sand-200 bg-white p-4"
+                className="rounded border border-ink-700 bg-ink-850 p-4"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-wide text-sand-500">
+                  <span className="text-xs uppercase tracking-wide text-ink-500">
                     {r.content_type} · {r.reason}
                   </span>
-                  <span className="text-xs text-sand-400">
+                  <span className="text-xs text-ink-400">
                     {new Date(r.created_at).toLocaleDateString()}
                   </span>
                 </div>
                 {r.description && (
-                  <p className="mt-2 text-sm text-indigo-800">
+                  <p className="mt-2 text-sm text-ink-100">
                     {r.description}
                   </p>
                 )}
-                <p className="mt-1 text-xs text-sand-400">
+                <p className="mt-1 text-xs text-ink-400">
                   Content ID: {r.content_id}
                 </p>
 
@@ -137,7 +137,7 @@ export default function ModerationPage() {
                         [r.id]: e.target.value,
                       }))
                     }
-                    className="rounded border border-sand-300 px-2 py-1.5 text-sm"
+                    className="rounded border border-ink-600 px-2 py-1.5 text-sm"
                   >
                     {ACTIONS.map((a) => (
                       <option key={a.value} value={a.value}>
@@ -148,7 +148,7 @@ export default function ModerationPage() {
                   <button
                     onClick={() => resolve(r.id)}
                     disabled={busyId === r.id}
-                    className="rounded bg-indigo-600 px-3 py-1.5 text-sm text-sand-50 hover:bg-indigo-500 disabled:opacity-60"
+                    className="rounded bg-spark-500 px-3 py-1.5 text-sm text-ink-50 hover:bg-spark-400 disabled:opacity-60"
                   >
                     {busyId === r.id ? "Applying…" : "Apply"}
                   </button>

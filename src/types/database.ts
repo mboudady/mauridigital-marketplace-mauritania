@@ -532,6 +532,27 @@ export type Database = {
           },
         ]
       }
+      hashtags: {
+        Row: {
+          created_at: string
+          id: string
+          tag: string
+          use_count: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tag: string
+          use_count?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tag?: string
+          use_count?: number | null
+        }
+        Relationships: []
+      }
       inventory: {
         Row: {
           created_at: string
@@ -1150,6 +1171,36 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_hashtags: {
+        Row: {
+          hashtag_id: string
+          product_id: string
+        }
+        Insert: {
+          hashtag_id: string
+          product_id: string
+        }
+        Update: {
+          hashtag_id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_hashtags_hashtag_id_fkey"
+            columns: ["hashtag_id"]
+            isOneToOne: false
+            referencedRelation: "hashtags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_hashtags_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -1795,6 +1846,10 @@ export type Database = {
       apply_for_affiliate: {
         Args: { p_merchant_id: string; p_product_id?: string }
         Returns: string
+      }
+      attach_hashtag: {
+        Args: { p_product_id: string; p_tag: string }
+        Returns: undefined
       }
       auto_approve_refunds: { Args: never; Returns: undefined }
       confirm_delivery: { Args: { p_order_id: string }; Returns: undefined }

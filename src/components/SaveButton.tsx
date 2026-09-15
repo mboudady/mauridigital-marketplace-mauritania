@@ -55,7 +55,7 @@ export function SaveButton({ productId }: { productId: string }) {
     <button
       onClick={toggle}
       disabled={busy}
-      className="flex items-center gap-1.5 text-sm text-sand-300 hover:text-sand-50"
+      className="flex items-center gap-1.5 text-sm text-ink-300 hover:text-ink-50"
     >
       <svg
         width="18"

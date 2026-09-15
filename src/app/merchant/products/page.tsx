@@ -27,28 +27,31 @@ export default async function MerchantProductsPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-4 py-8 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl">Products</h1>
+        <div className="flex items-center justify-between px-2">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-ink-400">Content</p>
+            <h1 className="font-display text-2xl">{products?.length ?? 0} posts</h1>
+          </div>
           <Link
             href="/merchant/products/new"
-            className="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-sand-50 hover:bg-indigo-500"
+            className="rounded-full bg-spark-500 px-4 py-2 text-sm font-medium text-ink-50 hover:bg-spark-400"
           >
-            Add product
+            + New post
           </Link>
         </div>
 
         {!products?.length ? (
-          <div className="mt-10 rounded border border-dashed border-sand-300 bg-white p-8 text-center text-sm text-sand-500">
-            No products yet.{" "}
-            <Link href="/merchant/products/new" className="underline">
-              Add your first one
+          <div className="mx-2 mt-10 rounded border border-dashed border-ink-600 bg-ink-850 p-10 text-center text-sm text-ink-500">
+            No posts yet.{" "}
+            <Link href="/merchant/products/new" className="text-spark-400 underline">
+              Post your first product
             </Link>
             .
           </div>
         ) : (
-          <ul className="mt-8 divide-y divide-sand-200 rounded border border-sand-200 bg-white">
+          <div className="mt-6 grid grid-cols-3 gap-1 sm:gap-2">
             {products.map((p) => {
               const media = (p.product_media ?? []) as Array<{
                 url: string;
@@ -58,36 +61,43 @@ export default async function MerchantProductsPage() {
               const hero =
                 media.find((m) => m.is_hero && m.type === "image") ??
                 media.find((m) => m.type === "image");
+              const hasVideo = media.some((m) => m.type === "video");
               return (
-                <li key={p.id} className="flex items-center gap-4 p-4">
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded bg-sand-100">
-                    {hero && (
-                      <Image
-                        src={hero.url}
-                        alt={p.name}
-                        fill
-                        sizes="56px"
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm">{p.name}</p>
-                    <p className="text-xs text-sand-500">
-                      {formatMRU(p.price_mru)} · {p.view_count} views ·{" "}
-                      {p.purchase_count} sold
+                <Link
+                  key={p.id}
+                  href={`/product/${p.id}`}
+                  className="group relative aspect-[9/16] overflow-hidden rounded bg-ink-850"
+                >
+                  {hero ? (
+                    <Image
+                      src={hero.url}
+                      alt={p.name}
+                      fill
+                      sizes="(max-width: 640px) 33vw, 200px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-ink-500">
+                      No image
+                    </div>
+                  )}
+                  {hasVideo && (
+                    <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-ink-50">
+                      <svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor">
+                        <path d="M1 0.5L9 5L1 9.5V0.5Z" />
+                      </svg>
+                    </span>
+                  )}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
+                    <p className="truncate text-[11px] text-ink-50">{p.name}</p>
+                    <p className="text-[10px] text-ink-300">
+                      {formatMRU(p.price_mru)} · {p.purchase_count} sold
                     </p>
                   </div>
-                  <Link
-                    href={`/product/${p.id}`}
-                    className="text-xs text-indigo-500 hover:underline"
-                  >
-                    View
-                  </Link>
-                </li>
+                </Link>
               );
             })}
-          </ul>
+          </div>
         )}
       </div>
     </main>

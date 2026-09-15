@@ -90,33 +90,33 @@ export default function CartPage() {
   const subtotal = lines.reduce((sum, l) => sum + l.price_mru * l.quantity, 0);
 
   if (loading) {
-    return <main className="min-h-screen bg-indigo-900" />;
+    return <main className="min-h-screen bg-ink-950" />;
   }
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
-        <h1 className="font-display text-2xl text-sand-50">Your cart</h1>
+        <h1 className="font-display text-2xl text-ink-50">Your cart</h1>
 
         {lines.length === 0 ? (
-          <div className="mt-10 text-center text-sand-400">
+          <div className="mt-10 text-center text-ink-400">
             <p>Your cart is empty.</p>
             <Link
               href="/feed"
-              className="mt-3 inline-block text-sand-200 underline underline-offset-4"
+              className="mt-3 inline-block text-ink-100 underline underline-offset-4"
             >
               Browse products
             </Link>
           </div>
         ) : (
           <>
-            <ul className="mt-6 divide-y divide-indigo-700">
+            <ul className="mt-6 divide-y divide-ink-800">
               {lines.map((line) => (
                 <li
                   key={`${line.product_id}-${line.variant_id}`}
                   className="flex items-center gap-4 py-4"
                 >
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-indigo-800">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-ink-850">
                     {line.imageUrl && (
                       <Image
                         src={line.imageUrl}
@@ -130,18 +130,18 @@ export default function CartPage() {
                   <div className="flex-1">
                     <Link
                       href={`/product/${line.product_id}`}
-                      className="text-sm text-sand-100 hover:underline"
+                      className="text-sm text-ink-100 hover:underline"
                     >
                       {line.name}
                     </Link>
-                    <p className="text-xs text-sand-400">
+                    <p className="text-xs text-ink-400">
                       {formatMRU(line.price_mru)}
                     </p>
                   </div>
-                  <div className="flex items-center rounded border border-indigo-600">
+                  <div className="flex items-center rounded border border-ink-600">
                     <button
                       onClick={() => updateQuantity(line, line.quantity - 1)}
-                      className="px-2 py-1 text-sand-300 hover:text-sand-50"
+                      className="px-2 py-1 text-ink-300 hover:text-ink-50"
                     >
                       −
                     </button>
@@ -150,14 +150,14 @@ export default function CartPage() {
                     </span>
                     <button
                       onClick={() => updateQuantity(line, line.quantity + 1)}
-                      className="px-2 py-1 text-sand-300 hover:text-sand-50"
+                      className="px-2 py-1 text-ink-300 hover:text-ink-50"
                     >
                       +
                     </button>
                   </div>
                   <button
                     onClick={() => updateQuantity(line, 0)}
-                    className="text-xs text-sand-500 hover:text-clay-400"
+                    className="text-xs text-ink-500 hover:text-red-400"
                   >
                     Remove
                   </button>
@@ -165,16 +165,16 @@ export default function CartPage() {
               ))}
             </ul>
 
-            <div className="mt-6 flex items-center justify-between border-t border-indigo-700 pt-4">
-              <span className="text-sm text-sand-300">Subtotal</span>
-              <span className="font-display text-xl text-sand-50">
+            <div className="mt-6 flex items-center justify-between border-t border-ink-700 pt-4">
+              <span className="text-sm text-ink-300">Subtotal</span>
+              <span className="font-display text-xl text-ink-50">
                 {formatMRU(subtotal)}
               </span>
             </div>
 
             <Link
               href="/checkout"
-              className="mt-6 block w-full rounded bg-clay-500 px-4 py-3 text-center text-sm font-medium text-sand-50 transition-colors hover:bg-clay-400"
+              className="mt-6 block w-full rounded bg-spark-500 px-4 py-3 text-center text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400"
             >
               Proceed to checkout
             </Link>

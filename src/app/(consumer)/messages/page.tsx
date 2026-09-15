@@ -37,17 +37,17 @@ export default function MessagesPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
-        <h1 className="font-display text-2xl text-sand-50">Messages</h1>
+        <h1 className="font-display text-2xl text-ink-50">Messages</h1>
 
         {!loading && conversations.length === 0 && (
-          <p className="mt-10 text-center text-sand-400">
+          <p className="mt-10 text-center text-ink-400">
             No conversations yet. Message a seller from any product page.
           </p>
         )}
 
-        <ul className="mt-6 divide-y divide-indigo-700">
+        <ul className="mt-6 divide-y divide-ink-800">
           {conversations.map((c) => (
             <li key={c.id}>
               <Link
@@ -56,7 +56,7 @@ export default function MessagesPage() {
               >
                 <span>{c.merchants?.store_name ?? "Seller"}</span>
                 {c.last_message_at && (
-                  <span className="text-xs text-sand-500">
+                  <span className="text-xs text-ink-500">
                     {new Date(c.last_message_at).toLocaleDateString()}
                   </span>
                 )}

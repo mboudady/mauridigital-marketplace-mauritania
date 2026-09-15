@@ -61,7 +61,7 @@ export function OrderActions({
         <button
           onClick={confirmDelivery}
           disabled={busy}
-          className="w-full rounded bg-clay-500 px-4 py-2.5 text-sm font-medium text-sand-50 hover:bg-clay-400 disabled:opacity-60"
+          className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 hover:bg-spark-400 disabled:opacity-60"
         >
           {busy ? "Confirming…" : "Confirm I received this order"}
         </button>
@@ -70,35 +70,35 @@ export function OrderActions({
       {canRequestRefund && !showRefundForm && (
         <button
           onClick={() => setShowRefundForm(true)}
-          className="w-full rounded border border-indigo-600 px-4 py-2 text-sm text-sand-200 hover:bg-indigo-800"
+          className="w-full rounded border border-ink-600 px-4 py-2 text-sm text-ink-100 hover:bg-ink-850"
         >
           Request a refund
         </button>
       )}
 
       {showRefundForm && (
-        <div className="rounded border border-indigo-700 bg-indigo-800 p-4">
-          <label className="text-xs text-sand-400">
+        <div className="rounded border border-ink-700 bg-ink-850 p-4">
+          <label className="text-xs text-ink-400">
             Why are you requesting a refund?
           </label>
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={2}
-            className="mt-1 w-full rounded border border-indigo-600 bg-indigo-900 px-3 py-2 text-sm text-sand-100 placeholder:text-sand-500"
+            className="mt-1 w-full rounded border border-ink-600 bg-ink-950 px-3 py-2 text-sm text-ink-100 placeholder:text-ink-500"
             placeholder="e.g. item never arrived, wrong product…"
           />
           <div className="mt-2 flex gap-2">
             <button
               onClick={submitRefundRequest}
               disabled={busy || reason.trim().length === 0}
-              className="rounded bg-clay-500 px-3 py-1.5 text-xs text-sand-50 hover:bg-clay-400 disabled:opacity-60"
+              className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 hover:bg-spark-400 disabled:opacity-60"
             >
               Submit request
             </button>
             <button
               onClick={() => setShowRefundForm(false)}
-              className="rounded border border-indigo-600 px-3 py-1.5 text-xs text-sand-300 hover:bg-indigo-900"
+              className="rounded border border-ink-600 px-3 py-1.5 text-xs text-ink-300 hover:bg-ink-950"
             >
               Cancel
             </button>
@@ -106,7 +106,7 @@ export function OrderActions({
         </div>
       )}
 
-      {error && <p className="text-sm text-clay-400">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </div>
   );
 }

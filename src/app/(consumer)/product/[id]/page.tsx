@@ -57,14 +57,14 @@ export default async function ProductPage({
   } | null;
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <ViewTracker productId={product.id} merchantId={product.merchant_id} />
       <Suspense fallback={null}>
         <AffiliateRefTracker productId={product.id} />
       </Suspense>
       <div className="safe-top mx-auto grid max-w-4xl gap-8 px-6 pt-6 sm:grid-cols-2 sm:px-10">
         <div>
-          <div className="relative aspect-square w-full overflow-hidden rounded bg-indigo-800">
+          <div className="relative aspect-square w-full overflow-hidden rounded bg-ink-850">
             {video ? (
               <iframe
                 src={video.url}
@@ -83,7 +83,7 @@ export default async function ProductPage({
                 priority
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-sm text-sand-500">
+              <div className="flex h-full items-center justify-center text-sm text-ink-500">
                 No image yet
               </div>
             )}
@@ -93,7 +93,7 @@ export default async function ProductPage({
               {images.slice(video ? 0 : 1, video ? 4 : 5).map((img) => (
                 <div
                   key={img.url}
-                  className="relative aspect-square overflow-hidden rounded bg-indigo-800"
+                  className="relative aspect-square overflow-hidden rounded bg-ink-850"
                 >
                   <Image
                     src={img.url}
@@ -109,38 +109,38 @@ export default async function ProductPage({
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-widest text-sand-500">
+          <p className="text-xs uppercase tracking-widest text-ink-500">
             {product.category}
           </p>
-          <h1 className="mt-1 font-display text-2xl text-sand-50">
+          <h1 className="mt-1 font-display text-2xl text-ink-50">
             {product.name}
           </h1>
-          <p className="mt-2 font-display text-xl text-sand-100">
+          <p className="mt-2 font-display text-xl text-ink-100">
             {formatMRU(product.price_mru)}
           </p>
 
           {merchant && (
-            <div className="mt-4 flex items-center gap-2 border-y border-indigo-700 py-3 text-sm">
-              <Link href={`/store/${product.merchant_id}`} className="text-sand-200 hover:underline">
+            <div className="mt-4 flex items-center gap-2 border-y border-ink-700 py-3 text-sm">
+              <Link href={`/store/${product.merchant_id}`} className="text-ink-100 hover:underline">
                 {merchant.store_name}
               </Link>
               {merchant.verification_status === "verified" && (
-                <span className="rounded bg-indigo-700 px-2 py-0.5 text-xs text-sand-300">
+                <span className="rounded bg-ink-800 px-2 py-0.5 text-xs text-ink-300">
                   Verified
                 </span>
               )}
               {product.rating_count && product.rating_count > 0 ? (
-                <span className="text-sand-400">
+                <span className="text-ink-400">
                   ★ {product.rating?.toFixed(1)} ({product.rating_count})
                 </span>
               ) : (
-                <span className="text-sand-500">No reviews yet</span>
+                <span className="text-ink-500">No reviews yet</span>
               )}
             </div>
           )}
 
           {product.description && (
-            <p className="mt-4 text-sm leading-relaxed text-sand-300">
+            <p className="mt-4 text-sm leading-relaxed text-ink-300">
               {product.description}
             </p>
           )}
@@ -162,7 +162,7 @@ export default async function ProductPage({
 
           <Link
             href="/feed"
-            className="mt-6 inline-block text-xs text-sand-500 hover:text-sand-300"
+            className="mt-6 inline-block text-xs text-ink-500 hover:text-ink-300"
           >
             ← Back to feed
           </Link>
@@ -172,23 +172,23 @@ export default async function ProductPage({
           </div>
 
           {reviews && reviews.length > 0 && (
-            <div className="mt-8 border-t border-indigo-700 pt-4">
-              <p className="text-sm font-medium text-sand-100">Reviews</p>
+            <div className="mt-8 border-t border-ink-700 pt-4">
+              <p className="text-sm font-medium text-ink-100">Reviews</p>
               <ul className="mt-3 space-y-3">
                 {reviews.map((r) => (
                   <li key={r.id} className="text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="text-clay-400">
+                      <span className="text-red-400">
                         {"★".repeat(r.rating_product)}
                         {"☆".repeat(5 - r.rating_product)}
                       </span>
                       {r.verified_purchase && (
-                        <span className="text-[10px] text-sand-500">
+                        <span className="text-[10px] text-ink-500">
                           Verified purchase
                         </span>
                       )}
                     </div>
-                    {r.text && <p className="mt-1 text-sand-300">{r.text}</p>}
+                    {r.text && <p className="mt-1 text-ink-300">{r.text}</p>}
                   </li>
                 ))}
               </ul>

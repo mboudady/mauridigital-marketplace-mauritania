@@ -26,16 +26,16 @@ function ApprovedLink({
   const link = `${typeof window !== "undefined" ? window.location.origin : ""}/product/${productId}?ref=${userId}`;
 
   return (
-    <div className="rounded border border-indigo-600 bg-indigo-800 p-3 text-xs">
-      <p className="text-sand-300">Your affiliate link:</p>
+    <div className="rounded border border-ink-600 bg-ink-850 p-3 text-xs">
+      <p className="text-ink-300">Your affiliate link:</p>
       <div className="mt-1 flex items-center gap-2">
-        <code className="flex-1 truncate text-sand-100">{link}</code>
+        <code className="flex-1 truncate text-ink-100">{link}</code>
         <button
           onClick={() => {
             navigator.clipboard.writeText(link);
             onCopy();
           }}
-          className="shrink-0 rounded bg-clay-500 px-2 py-1 text-sand-50"
+          className="shrink-0 rounded bg-spark-500 px-2 py-1 text-ink-50"
         >
           {copied ? "Copied" : "Copy"}
         </button>
@@ -121,14 +121,14 @@ export function AffiliateAction({
   }
 
   return (
-    <div className="rounded border border-dashed border-indigo-600 p-3 text-xs text-sand-300">
+    <div className="rounded border border-dashed border-ink-600 p-3 text-xs text-ink-300">
       {status === "pending" && "Your affiliate application is pending approval."}
       {status === "rejected" && "Your affiliate application wasn't approved."}
       {(status === "none" || status === "applying") && (
         <button
           onClick={apply}
           disabled={status === "applying"}
-          className="text-sand-200 underline decoration-sand-500 hover:text-sand-50"
+          className="text-ink-100 underline decoration-ink-500 hover:text-ink-50"
         >
           {status === "applying" ? "Applying…" : "Become an affiliate for this product"}
         </button>

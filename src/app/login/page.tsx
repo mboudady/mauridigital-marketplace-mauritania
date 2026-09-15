@@ -37,26 +37,26 @@ function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-indigo-900 px-6 text-sand-100">
+    <main className="flex min-h-screen items-center justify-center bg-ink-950 px-6 text-ink-100">
       <div className="w-full max-w-sm">
-        <h1 className="font-display text-3xl text-sand-50">
+        <h1 className="font-display text-3xl text-ink-50">
           {isMerchant ? "Open your store" : "Welcome back"}
         </h1>
-        <p className="mt-2 text-sm text-sand-300">
+        <p className="mt-2 text-sm text-ink-300">
           {isMerchant
             ? "Sign in to set up your storefront on Souq."
             : "Sign in to keep discovering and buying."}
         </p>
 
         {status === "sent" ? (
-          <div className="mt-8 rounded border border-indigo-600 bg-indigo-800 p-4 text-sm text-sand-200">
-            Check <span className="text-sand-50">{email}</span> for a sign-in
+          <div className="mt-8 rounded border border-ink-600 bg-ink-850 p-4 text-sm text-ink-100">
+            Check <span className="text-ink-50">{email}</span> for a sign-in
             link. It expires in 1 hour.
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div>
-              <label htmlFor="email" className="text-sm text-sand-300">
+              <label htmlFor="email" className="text-sm text-ink-300">
                 Email
               </label>
               <input
@@ -66,23 +66,23 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="mt-1 w-full rounded border border-indigo-600 bg-indigo-800 px-3 py-2 text-sand-50 placeholder:text-sand-500 focus:border-sand-400 focus:outline-none focus:ring-1 focus:ring-sand-400"
+                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
               />
             </div>
 
             {status === "error" && (
-              <p className="text-sm text-clay-400">{errorMessage}</p>
+              <p className="text-sm text-red-400">{errorMessage}</p>
             )}
 
             <button
               type="submit"
               disabled={status === "sending"}
-              className="w-full rounded bg-clay-500 px-4 py-2.5 text-sm font-medium text-sand-50 transition-colors hover:bg-clay-400 disabled:opacity-60"
+              className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
             >
               {status === "sending" ? "Sending link…" : "Send sign-in link"}
             </button>
 
-            <p className="text-xs text-sand-500">
+            <p className="text-xs text-ink-500">
               Phone sign-in with SMS codes is coming soon for Mauritanian
               numbers. Email works today.
             </p>

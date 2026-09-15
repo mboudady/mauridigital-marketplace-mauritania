@@ -38,23 +38,23 @@ export default async function MerchantOrdersPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-3xl">
         <h1 className="font-display text-3xl">Orders</h1>
 
         {!orders?.length ? (
-          <p className="mt-10 text-center text-sand-500">No orders yet.</p>
+          <p className="mt-10 text-center text-ink-500">No orders yet.</p>
         ) : (
-          <ul className="mt-8 divide-y divide-sand-200 rounded border border-sand-200 bg-white">
+          <ul className="mt-8 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
             {orders.map((o) => (
               <li key={o.id}>
                 <Link
                   href={`/merchant/orders/${o.id}`}
-                  className="flex items-center justify-between p-4 hover:bg-sand-50"
+                  className="flex items-center justify-between p-4 hover:bg-ink-950"
                 >
                   <div>
                     <p className="text-sm">{o.order_number}</p>
-                    <p className="text-xs text-sand-500">
+                    <p className="text-xs text-ink-500">
                       {new Date(o.created_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -63,8 +63,8 @@ export default async function MerchantOrdersPage() {
                     <p
                       className={`text-xs ${
                         o.status === "pending"
-                          ? "font-medium text-clay-500"
-                          : "text-sand-500"
+                          ? "font-medium text-red-400"
+                          : "text-ink-500"
                       }`}
                     >
                       {STATUS_LABEL[o.status] ?? o.status}

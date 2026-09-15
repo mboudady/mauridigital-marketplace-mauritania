@@ -44,14 +44,14 @@ export function ReportButton({
   }
 
   if (status === "sent") {
-    return <p className="text-xs text-sand-500">Thanks — we&rsquo;ll review this.</p>;
+    return <p className="text-xs text-ink-500">Thanks — we&rsquo;ll review this.</p>;
   }
 
   if (!open) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="text-xs text-sand-500 hover:text-clay-400"
+        className="text-xs text-ink-500 hover:text-red-400"
       >
         Report this {contentType}
       </button>
@@ -59,11 +59,11 @@ export function ReportButton({
   }
 
   return (
-    <div className="rounded border border-sand-300 bg-white p-3 text-xs">
+    <div className="rounded border border-ink-600 bg-ink-850 p-3 text-xs">
       <select
         value={reason}
         onChange={(e) => setReason(e.target.value)}
-        className="w-full rounded border border-sand-300 px-2 py-1.5"
+        className="w-full rounded border border-ink-600 px-2 py-1.5"
       >
         {REASONS.map((r) => (
           <option key={r.value} value={r.value}>
@@ -76,19 +76,19 @@ export function ReportButton({
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Details (optional)"
         rows={2}
-        className="mt-2 w-full rounded border border-sand-300 px-2 py-1.5"
+        className="mt-2 w-full rounded border border-ink-600 px-2 py-1.5"
       />
       <div className="mt-2 flex gap-2">
         <button
           onClick={submit}
           disabled={status === "sending"}
-          className="rounded bg-clay-500 px-3 py-1 text-sand-50 disabled:opacity-60"
+          className="rounded bg-spark-500 px-3 py-1 text-ink-50 disabled:opacity-60"
         >
           Submit report
         </button>
         <button
           onClick={() => setOpen(false)}
-          className="rounded border border-sand-300 px-3 py-1"
+          className="rounded border border-ink-600 px-3 py-1"
         >
           Cancel
         </button>

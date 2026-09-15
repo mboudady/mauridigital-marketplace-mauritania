@@ -30,32 +30,32 @@ export default async function OrdersPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-2xl px-6 pt-6 sm:px-10">
-        <h1 className="font-display text-2xl text-sand-50">Your orders</h1>
+        <h1 className="font-display text-2xl text-ink-50">Your orders</h1>
 
         {!orders?.length ? (
-          <p className="mt-10 text-center text-sand-400">No orders yet.</p>
+          <p className="mt-10 text-center text-ink-400">No orders yet.</p>
         ) : (
-          <ul className="mt-6 divide-y divide-indigo-700">
+          <ul className="mt-6 divide-y divide-ink-800">
             {orders.map((o) => (
               <li key={o.id}>
                 <Link
                   href={`/orders/${o.id}`}
-                  className="flex items-center justify-between py-4 hover:bg-indigo-800/40"
+                  className="flex items-center justify-between py-4 hover:bg-ink-850/40"
                 >
                   <div>
-                    <p className="text-sm text-sand-100">{o.order_number}</p>
-                    <p className="text-xs text-sand-400">
+                    <p className="text-sm text-ink-100">{o.order_number}</p>
+                    <p className="text-xs text-ink-400">
                       {(o.merchants as unknown as { store_name: string } | null)
                         ?.store_name}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-sand-100">
+                    <p className="text-sm text-ink-100">
                       {formatMRU(o.total_mru)}
                     </p>
-                    <p className="text-xs text-sand-400">
+                    <p className="text-xs text-ink-400">
                       {STATUS_LABEL[o.status] ?? o.status}
                     </p>
                   </div>

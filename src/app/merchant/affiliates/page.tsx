@@ -129,19 +129,19 @@ export default function MerchantAffiliatesPage() {
   const approved = enrollments.filter((e) => e.status === "approved");
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-2xl">
         <h1 className="font-display text-3xl">Affiliate program</h1>
-        <p className="mt-1 text-sm text-sand-500">
+        <p className="mt-1 text-sm text-ink-500">
           Let creators earn a commission for driving sales to your products.
         </p>
 
-        <div className="mt-6 flex items-center justify-between rounded border border-sand-200 bg-white p-4">
+        <div className="mt-6 flex items-center justify-between rounded border border-ink-700 bg-ink-850 p-4">
           <div>
             <p className="text-sm font-medium">
               {program?.enabled ? "Program is open" : "Program is closed"}
             </p>
-            <p className="text-xs text-sand-500">
+            <p className="text-xs text-ink-500">
               Creators can apply once this is open
             </p>
           </div>
@@ -150,49 +150,49 @@ export default function MerchantAffiliatesPage() {
             disabled={saving}
             className={`rounded px-4 py-1.5 text-sm font-medium disabled:opacity-60 ${
               program?.enabled
-                ? "border border-sand-300 text-sand-600"
-                : "bg-indigo-600 text-sand-50"
+                ? "border border-ink-600 text-ink-300"
+                : "bg-spark-500 text-ink-50"
             }`}
           >
             {program?.enabled ? "Close program" : "Open program"}
           </button>
         </div>
 
-        <div className="mt-4 flex items-end gap-3 rounded border border-sand-200 bg-white p-4">
+        <div className="mt-4 flex items-end gap-3 rounded border border-ink-700 bg-ink-850 p-4">
           <div>
-            <label className="text-xs text-sand-500">Default commission (%)</label>
+            <label className="text-xs text-ink-500">Default commission (%)</label>
             <input
               type="number"
               min={1}
               max={50}
               value={rate}
               onChange={(e) => setRate(e.target.value)}
-              className="mt-1 block w-24 rounded border border-sand-300 px-2 py-1.5 text-sm"
+              className="mt-1 block w-24 rounded border border-ink-600 px-2 py-1.5 text-sm"
             />
           </div>
           <button
             onClick={saveSettings}
             disabled={saving}
-            className="rounded bg-indigo-600 px-4 py-1.5 text-sm text-sand-50 disabled:opacity-60"
+            className="rounded bg-spark-500 px-4 py-1.5 text-sm text-ink-50 disabled:opacity-60"
           >
             Save
           </button>
-          <p className="text-xs text-sand-400">
+          <p className="text-xs text-ink-400">
             Comes out of your margin — separate from the platform&rsquo;s 7% commission.
           </p>
         </div>
 
         {pending.length > 0 && (
           <section className="mt-8">
-            <h2 className="text-sm font-medium text-sand-700">
+            <h2 className="text-sm font-medium text-ink-300">
               Pending applications ({pending.length})
             </h2>
-            <ul className="mt-3 divide-y divide-sand-200 rounded border border-sand-200 bg-white">
+            <ul className="mt-3 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
               {pending.map((e) => (
                 <li key={e.id} className="flex items-center justify-between p-4">
                   <div>
                     <p className="text-sm">Creator {e.creator_id.slice(0, 8)}</p>
-                    <p className="text-xs text-sand-500">
+                    <p className="text-xs text-ink-500">
                       {e.product_id ? "Specific product" : "Whole store"} ·{" "}
                       {e.commission_rate}% commission
                     </p>
@@ -201,14 +201,14 @@ export default function MerchantAffiliatesPage() {
                     <button
                       onClick={() => respond(e.id, true)}
                       disabled={busyId === e.id}
-                      className="rounded bg-indigo-600 px-3 py-1.5 text-xs text-sand-50 disabled:opacity-60"
+                      className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 disabled:opacity-60"
                     >
                       Approve
                     </button>
                     <button
                       onClick={() => respond(e.id, false)}
                       disabled={busyId === e.id}
-                      className="rounded border border-sand-300 px-3 py-1.5 text-xs disabled:opacity-60"
+                      className="rounded border border-ink-600 px-3 py-1.5 text-xs disabled:opacity-60"
                     >
                       Reject
                     </button>
@@ -220,17 +220,17 @@ export default function MerchantAffiliatesPage() {
         )}
 
         <section className="mt-8">
-          <h2 className="text-sm font-medium text-sand-700">
+          <h2 className="text-sm font-medium text-ink-300">
             Active affiliates ({approved.length})
           </h2>
           {approved.length === 0 ? (
-            <p className="mt-3 text-sm text-sand-400">No approved affiliates yet.</p>
+            <p className="mt-3 text-sm text-ink-400">No approved affiliates yet.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-sand-200 rounded border border-sand-200 bg-white">
+            <ul className="mt-3 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
               {approved.map((e) => (
                 <li key={e.id} className="flex items-center justify-between p-4 text-sm">
                   <span>Creator {e.creator_id.slice(0, 8)}</span>
-                  <span className="text-sand-500">
+                  <span className="text-ink-500">
                     {formatMRU(commissionTotals[e.creator_id] ?? 0)} earned
                   </span>
                 </li>

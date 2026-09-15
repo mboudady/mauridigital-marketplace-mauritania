@@ -61,10 +61,10 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-16 text-indigo-900">
+    <main className="min-h-screen bg-ink-950 px-6 py-16 text-ink-50">
       <div className="mx-auto max-w-md">
         <h1 className="font-display text-3xl">Set up your store</h1>
-        <p className="mt-2 text-sm text-indigo-500">
+        <p className="mt-2 text-sm text-spark-400">
           Free to open. You only pay a 7% commission when you make a sale.
         </p>
 
@@ -79,7 +79,7 @@ export default function OnboardingPage() {
               value={storeName}
               onChange={(e) => setStoreName(e.target.value)}
               placeholder="e.g. Boutique Amal"
-              className="mt-1 w-full rounded border border-sand-300 bg-white px-3 py-2 text-indigo-900 placeholder:text-sand-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
             />
           </div>
 
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 w-full rounded border border-sand-300 bg-white px-3 py-2 text-indigo-900 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
@@ -104,7 +104,7 @@ export default function OnboardingPage() {
           <div>
             <label htmlFor="description" className="text-sm font-medium">
               Description{" "}
-              <span className="font-normal text-sand-400">(optional)</span>
+              <span className="font-normal text-ink-400">(optional)</span>
             </label>
             <textarea
               id="description"
@@ -112,18 +112,18 @@ export default function OnboardingPage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="What do you sell, and what makes your store worth following?"
-              className="mt-1 w-full rounded border border-sand-300 bg-white px-3 py-2 text-indigo-900 placeholder:text-sand-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
             />
           </div>
 
           {status === "error" && (
-            <p className="text-sm text-clay-500">{errorMessage}</p>
+            <p className="text-sm text-red-400">{errorMessage}</p>
           )}
 
           <button
             type="submit"
             disabled={status === "saving"}
-            className="w-full rounded bg-indigo-600 px-4 py-2.5 text-sm font-medium text-sand-50 transition-colors hover:bg-indigo-500 disabled:opacity-60"
+            className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
           >
             {status === "saving" ? "Creating store…" : "Create store"}
           </button>

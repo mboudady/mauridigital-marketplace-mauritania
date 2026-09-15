@@ -58,12 +58,12 @@ export default function SavedPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24 text-sand-100">
+    <main className="min-h-screen bg-ink-950 text-ink-100">
       <div className="safe-top mx-auto max-w-5xl px-6 pt-6 sm:px-10">
-        <h1 className="font-display text-2xl text-sand-50">Saved</h1>
+        <h1 className="font-display text-2xl text-ink-50">Saved</h1>
 
         {!loading && cards.length === 0 && (
-          <p className="mt-10 text-center text-sand-400">
+          <p className="mt-10 text-center text-ink-400">
             Nothing saved yet.
           </p>
         )}

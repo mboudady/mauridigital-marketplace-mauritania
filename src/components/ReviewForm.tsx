@@ -56,18 +56,18 @@ export function ReviewForm({
   }
 
   if (status === "done") {
-    return <p className="text-sm text-sand-300">Thanks for your review!</p>;
+    return <p className="text-sm text-ink-300">Thanks for your review!</p>;
   }
 
   return (
-    <div className="rounded border border-indigo-700 bg-indigo-800 p-4">
-      <p className="text-sm text-sand-100">Rate this order</p>
+    <div className="rounded border border-ink-700 bg-ink-850 p-4">
+      <p className="text-sm text-ink-100">Rate this order</p>
       <div className="mt-2 flex gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
             onClick={() => setRating(star)}
-            className={`text-2xl ${star <= rating ? "text-clay-400" : "text-sand-600"}`}
+            className={`text-2xl ${star <= rating ? "text-red-400" : "text-ink-300"}`}
           >
             ★
           </button>
@@ -78,15 +78,15 @@ export function ReviewForm({
         onChange={(e) => setText(e.target.value)}
         rows={2}
         placeholder="How was it? (optional)"
-        className="mt-3 w-full rounded border border-indigo-600 bg-indigo-900 px-3 py-2 text-sm text-sand-100 placeholder:text-sand-500"
+        className="mt-3 w-full rounded border border-ink-600 bg-ink-950 px-3 py-2 text-sm text-ink-100 placeholder:text-ink-500"
       />
       {status === "error" && (
-        <p className="mt-2 text-xs text-clay-400">{errorMessage}</p>
+        <p className="mt-2 text-xs text-red-400">{errorMessage}</p>
       )}
       <button
         onClick={submit}
         disabled={status === "saving"}
-        className="mt-3 rounded bg-clay-500 px-4 py-1.5 text-sm text-sand-50 hover:bg-clay-400 disabled:opacity-60"
+        className="mt-3 rounded bg-spark-500 px-4 py-1.5 text-sm text-ink-50 hover:bg-spark-400 disabled:opacity-60"
       >
         {status === "saving" ? "Submitting…" : "Submit review"}
       </button>

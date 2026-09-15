@@ -41,9 +41,9 @@ export default async function MerchantDashboardPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-sand-50 px-6 py-12 text-indigo-900 sm:px-10">
+    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
       <div className="mx-auto max-w-3xl">
-        <p className="text-xs uppercase tracking-widest text-indigo-400">
+        <p className="text-xs uppercase tracking-widest text-ink-300">
           {merchant.category}
         </p>
         <h1 className="mt-1 font-display text-3xl">{merchant.store_name}</h1>
@@ -52,9 +52,9 @@ export default async function MerchantDashboardPage() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded border border-sand-200 bg-white p-4"
+              className="rounded border border-ink-700 bg-ink-850 p-4"
             >
-              <dt className="text-xs text-sand-500">{stat.label}</dt>
+              <dt className="text-xs text-ink-500">{stat.label}</dt>
               <dd className="mt-1 font-display text-xl">{stat.value}</dd>
             </div>
           ))}
@@ -63,45 +63,44 @@ export default async function MerchantDashboardPage() {
         <div className="mt-10 flex gap-3">
           <a
             href="/merchant/orders"
-            className="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-sand-50 hover:bg-indigo-500"
+            className="rounded bg-spark-500 px-4 py-2 text-sm font-medium text-ink-50 hover:bg-spark-400"
           >
             Manage orders
           </a>
           <a
             href="/merchant/affiliates"
-            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="rounded border border-ink-600 px-4 py-2 text-sm font-medium text-spark-400 hover:bg-ink-800"
           >
             Affiliates
           </a>
           <a
             href="/merchant/analytics"
-            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="rounded border border-ink-600 px-4 py-2 text-sm font-medium text-spark-400 hover:bg-ink-800"
           >
             Analytics
           </a>
           <a
             href="/merchant/messages"
-            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="rounded border border-ink-600 px-4 py-2 text-sm font-medium text-spark-400 hover:bg-ink-800"
           >
             Messages
           </a>
           <a
             href="/merchant/products"
-            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="rounded border border-ink-600 px-4 py-2 text-sm font-medium text-spark-400 hover:bg-ink-800"
           >
             Products
           </a>
           <a
             href="/merchant/products/new"
-            className="rounded border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="rounded border border-ink-600 px-4 py-2 text-sm font-medium text-spark-400 hover:bg-ink-800"
           >
             Add a product
           </a>
         </div>
 
-        <div className="mt-6 rounded border border-dashed border-sand-300 bg-white p-6 text-center text-sm text-sand-500">
-          Analytics dashboards and affiliate management land later in the
-          roadmap.
+        <div className="mt-6 rounded border border-dashed border-ink-600 bg-ink-850 p-6 text-center text-sm text-ink-500">
+          Your store is live. Manage everything from the links above.
         </div>
       </div>
     </main>

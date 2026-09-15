@@ -103,12 +103,12 @@ export function ConversationThread({
   }
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-indigo-900">
-      <div className="safe-top flex items-center gap-3 border-b border-indigo-800 px-4 py-3">
-        <Link href={backHref} className="text-sand-400">
+    <div className="flex h-[100dvh] flex-col bg-ink-950">
+      <div className="safe-top flex items-center gap-3 border-b border-ink-800 px-4 py-3">
+        <Link href={backHref} className="text-ink-400">
           ←
         </Link>
-        <p className="font-medium text-sand-50">{headerTitle}</p>
+        <p className="font-medium text-ink-50">{headerTitle}</p>
       </div>
 
       <div className="flex-1 space-y-2 overflow-y-auto px-4 py-4">
@@ -120,8 +120,8 @@ export function ConversationThread({
             <div
               className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${
                 m.sender_id === myUserId
-                  ? "bg-clay-500 text-sand-50"
-                  : "bg-indigo-800 text-sand-100"
+                  ? "bg-spark-500 text-ink-50"
+                  : "bg-ink-850 text-ink-100"
               }`}
             >
               {m.content}
@@ -131,18 +131,18 @@ export function ConversationThread({
         <div ref={bottomRef} />
       </div>
 
-      <div className="safe-bottom flex items-center gap-2 border-t border-indigo-800 p-3">
+      <div className="safe-bottom flex items-center gap-2 border-t border-ink-800 p-3">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
           placeholder="Message…"
-          className="flex-1 rounded-full border border-indigo-600 bg-indigo-800 px-4 py-2 text-sm text-sand-50 placeholder:text-sand-500 focus:border-sand-400 focus:outline-none"
+          className="flex-1 rounded-full border border-ink-600 bg-ink-850 px-4 py-2 text-sm text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none"
         />
         <button
           onClick={send}
           disabled={sending || !draft.trim()}
-          className="rounded-full bg-clay-500 px-4 py-2 text-sm text-sand-50 disabled:opacity-60"
+          className="rounded-full bg-spark-500 px-4 py-2 text-sm text-ink-50 disabled:opacity-60"
         >
           Send
         </button>

@@ -11,14 +11,35 @@ export default async function SearchPage({
 
   let products: any[] = [];
   if (q && q.trim().length > 0) {
-    const { data } = await supabase
-      .from("products")
-      .select(
-        "id, name, price_mru, category, merchants(store_name), product_media(url, is_hero, type)"
-      )
-      .ilike("name", `%${q}%`)
-      .limit(24);
-    products = data ?? [];
+    const trimmed = q.trim();
+    if (trimmed.startsWith("#")) {
+      const tag = trimmed.slice(1).toLowerCase();
+      const { data: hashtagRow } = await supabase
+        .from("hashtags")
+        .select("id")
+        .eq("tag", tag)
+        .maybeSingle();
+
+      if (hashtagRow) {
+        const { data } = await supabase
+          .from("products")
+          .select(
+            "id, name, price_mru, category, merchants(store_name), product_media(url, is_hero, type), product_hashtags!inner(hashtag_id)"
+          )
+          .eq("product_hashtags.hashtag_id", hashtagRow.id)
+          .limit(24);
+        products = data ?? [];
+      }
+    } else {
+      const { data } = await supabase
+        .from("products")
+        .select(
+          "id, name, price_mru, category, merchants(store_name), product_media(url, is_hero, type)"
+        )
+        .ilike("name", `%${trimmed}%`)
+        .limit(24);
+      products = data ?? [];
+    }
   }
 
   const cards: ProductCardData[] = products.map((p) => {
@@ -42,7 +63,7 @@ export default async function SearchPage({
   });
 
   return (
-    <main className="min-h-screen bg-indigo-900 pb-24">
+    <main className="min-h-screen bg-ink-950">
       <div className="safe-top mx-auto max-w-5xl px-6 pt-6 sm:px-10">
         <form className="max-w-md">
           <input
@@ -51,12 +72,12 @@ export default async function SearchPage({
             defaultValue={q ?? ""}
             placeholder="Search products…"
             autoFocus
-            className="w-full rounded border border-indigo-600 bg-indigo-800 px-4 py-2.5 text-sand-50 placeholder:text-sand-500 focus:border-sand-400 focus:outline-none focus:ring-1 focus:ring-sand-400"
+            className="w-full rounded border border-ink-600 bg-ink-850 px-4 py-2.5 text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
           />
         </form>
 
         {q && (
-          <p className="mt-6 text-sm text-sand-400">
+          <p className="mt-6 text-sm text-ink-400">
             {cards.length} result{cards.length === 1 ? "" : "s"} for &ldquo;
             {q}&rdquo;
           </p>

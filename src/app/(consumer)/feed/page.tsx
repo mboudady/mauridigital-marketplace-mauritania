@@ -1,31 +1,82 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { VerticalFeed, type FeedCardData } from "@/components/VerticalFeed";
 
-export default async function FeedPage() {
+function FeedTabs({ active }: { active: "for-you" | "following" }) {
+  return (
+    <div className="safe-top flex items-center justify-center gap-6 bg-ink-950 py-3 text-sm">
+      <Link
+        href="/feed"
+        className={active === "for-you" ? "font-medium text-ink-50" : "text-ink-500"}
+      >
+        For You
+      </Link>
+      <Link
+        href="/feed?tab=following"
+        className={active === "following" ? "font-medium text-ink-50" : "text-ink-500"}
+      >
+        Following
+      </Link>
+    </div>
+  );
+}
+
+export default async function FeedPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const { tab } = await searchParams;
+  const isFollowing = tab === "following";
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Candidate pool: recent + broadly popular. Personalization re-ranks
-  // this pool below rather than changing what's eligible to appear.
-  const { data: products } = await supabase
+  if (isFollowing && !user) {
+    return (
+      <div className="flex h-full flex-col bg-ink-950">
+        <FeedTabs active="following" />
+        <div className="flex flex-1 flex-col items-center justify-center px-6 text-center text-ink-300">
+          <p className="text-sm">Log in to see products from merchants you follow.</p>
+          <Link href="/login" className="mt-3 text-sm text-spark-400 underline">
+            Log in
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  let followedMerchantIds: string[] = [];
+  if (isFollowing && user) {
+    const { data: follows } = await supabase
+      .from("follows")
+      .select("merchant_id")
+      .eq("follower_id", user.id);
+    followedMerchantIds = (follows ?? []).map((f) => f.merchant_id);
+  }
+
+  let query = supabase
     .from("products")
     .select(
-      "id, name, price_mru, merchant_id, purchase_count, like_count, view_count, created_at, merchants(store_name), product_media(url, is_hero, type, display_order)"
-    )
+      "id, name, price_mru, merchant_id, purchase_count, like_count, view_count, created_at, merchants(store_name), product_media(url, is_hero, type, display_order), product_hashtags(hashtags(tag))"
+    );
+
+  if (isFollowing) {
+    query = query.in("merchant_id", followedMerchantIds.length ? followedMerchantIds : ["00000000-0000-0000-0000-000000000000"]);
+  }
+
+  const { data: products } = await query
     .order("purchase_count", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(60);
 
-  // V1 behavioral ranking: pull the signed-in user's recent activity and
-  // boost products/categories/merchants they've actually engaged with.
-  // Purchases count far more than likes, per the roadmap's weighting.
   let likedProductIds = new Set<string>();
   let purchasedMerchantIds = new Set<string>();
   let engagedMerchantIds = new Set<string>();
 
-  if (user) {
+  if (user && !isFollowing) {
     const { data: recentEvents } = await supabase
       .from("events")
       .select("event_type, product_id, merchant_id")
@@ -52,12 +103,15 @@ export default async function FeedPage() {
       (p.like_count ?? 0) * 1 +
       (p.view_count ?? 0) * 0.1;
 
-    const ageDays = (now - new Date(p.created_at).getTime()) / (1000 * 60 * 60 * 24);
-    score += Math.max(0, 5 - ageDays * 0.5); // freshness boost, decays over ~10 days
-
-    if (purchasedMerchantIds.has(p.merchant_id)) score += 8; // bought here before
-    if (engagedMerchantIds.has(p.merchant_id)) score += 3; // browsed here before
-    if (likedProductIds.has(p.id)) score -= 20; // seen and liked already; de-prioritize repeat
+    if (!isFollowing) {
+      const ageDays = (now - new Date(p.created_at).getTime()) / (1000 * 60 * 60 * 24);
+      score += Math.max(0, 5 - ageDays * 0.5);
+      if (purchasedMerchantIds.has(p.merchant_id)) score += 8;
+      if (engagedMerchantIds.has(p.merchant_id)) score += 3;
+      if (likedProductIds.has(p.id)) score -= 20;
+    } else {
+      score = new Date(p.created_at).getTime(); // Following: strictly newest-first
+    }
 
     return { p, score };
   });
@@ -75,6 +129,9 @@ export default async function FeedPage() {
     const hero =
       media.find((m) => m.is_hero && m.type === "image") ??
       media.find((m) => m.type === "image");
+    const hashtags = ((p.product_hashtags ?? []) as Array<{ hashtags: { tag: string } | null }>)
+      .map((ph) => ph.hashtags?.tag)
+      .filter((t): t is string => !!t);
     return {
       id: p.id,
       name: p.name,
@@ -85,8 +142,16 @@ export default async function FeedPage() {
           ?.store_name ?? "",
       heroImageUrl: hero?.url ?? null,
       videoEmbedUrl: video?.url ?? null,
+      hashtags,
     };
   });
 
-  return <VerticalFeed products={cards} />;
+  return (
+    <div className="flex h-full flex-col bg-ink-950">
+      <FeedTabs active={isFollowing ? "following" : "for-you"} />
+      <div className="min-h-0 flex-1">
+        <VerticalFeed products={cards} />
+      </div>
+    </div>
+  );
 }
