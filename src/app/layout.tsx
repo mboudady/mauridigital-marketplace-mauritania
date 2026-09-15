@@ -16,7 +16,11 @@ const plexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Souq — Discover, watch, buy",
+  metadataBase: new URL("https://marketplace-mauritania.vercel.app"),
+  title: {
+    default: "Souq — Discover, watch, buy",
+    template: "%s",
+  },
   description:
     "A video-first marketplace connecting Mauritanian merchants and shoppers.",
   manifest: "/manifest.json",
@@ -28,6 +32,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icons/icon-192.png",
     apple: "/icons/apple-touch-icon.png",
+  },
+  openGraph: {
+    siteName: "Souq",
+    type: "website",
   },
 };
 

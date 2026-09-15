@@ -57,23 +57,25 @@ export default function MerchantMessagesPage() {
         </p>
       )}
 
-      <ul className="divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
-        {conversations.map((c) => (
-          <li key={c.id}>
-            <Link
-              href={`/merchant/messages/${c.id}`}
-              className="flex items-center justify-between p-4 hover:bg-ink-950"
-            >
-              <span className="text-sm">Customer</span>
-              {c.last_message_at && (
-                <span className="text-xs text-ink-500">
-                  {new Date(c.last_message_at).toLocaleDateString()}
-                </span>
-              )}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {conversations.length > 0 && (
+        <ul className="divide-y divide-ink-800 rounded-lg border border-ink-700 bg-ink-850">
+          {conversations.map((c) => (
+            <li key={c.id}>
+              <Link
+                href={`/merchant/messages/${c.id}`}
+                className="flex items-center justify-between p-4 hover:bg-ink-950"
+              >
+                <span className="text-sm">Customer</span>
+                {c.last_message_at && (
+                  <span className="text-xs text-ink-500">
+                    {new Date(c.last_message_at).toLocaleDateString()}
+                  </span>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

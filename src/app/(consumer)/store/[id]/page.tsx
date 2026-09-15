@@ -1,7 +1,34 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { FollowButton } from "@/components/FollowButton";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: merchant } = await supabase
+    .from("merchants")
+    .select("store_name, description, logo_url")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!merchant) return { title: "Store not found — Souq" };
+
+  return {
+    title: `${merchant.store_name} — Souq`,
+    description: merchant.description ?? `Shop ${merchant.store_name} on Souq`,
+    openGraph: {
+      title: merchant.store_name,
+      description: merchant.description ?? undefined,
+      images: merchant.logo_url ? [merchant.logo_url] : [],
+    },
+  };
+}
 
 export default async function StorePage({
   params,

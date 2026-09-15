@@ -181,6 +181,12 @@ export default async function FeedPage({
     };
   });
 
+  const creatorIds = [...new Set((creatorPostRows ?? []).map((cp: any) => cp.creator_id))];
+  const { data: creatorProfiles } = creatorIds.length
+    ? await supabase.from("user_profiles").select("user_id, display_name").in("user_id", creatorIds)
+    : { data: [] };
+  const creatorNameById = new Map((creatorProfiles ?? []).map((p) => [p.user_id, p.display_name]));
+
   const creatorCards: ScoredCard[] = (creatorPostRows ?? [])
     .filter((cp: any) => cp.products) // guard against a deleted/inaccessible product
     .map((cp: any) => {
@@ -207,6 +213,8 @@ export default async function FeedPage({
         hashtags,
         sourceLabel: "Affiliate post",
         productId: cp.product_id,
+        creatorId: cp.creator_id,
+        creatorName: creatorNameById.get(cp.creator_id) ?? "Creator",
         createdAt: cp.created_at,
         score: scoreOf(cp.created_at, merchantId, 0, cp.like_count ?? 0, cp.view_count ?? 0, cp.product_id),
       };

@@ -21,6 +21,8 @@ export type FeedCardData = {
   videoEmbedUrl: string | null;
   hashtags: string[];
   sourceLabel: string | null;
+  creatorId?: string;
+  creatorName?: string;
 };
 
 function RailButton({
@@ -122,12 +124,22 @@ function FeedCard({
       router.push("/login");
       return;
     }
-    if (following) {
-      await supabase.from("follows").delete().eq("follower_id", user.id).eq("merchant_id", product.merchantId);
-      setFollowing(false);
+    if (product.creatorId) {
+      if (following) {
+        await supabase.from("creator_follows").delete().eq("follower_id", user.id).eq("creator_id", product.creatorId);
+        setFollowing(false);
+      } else {
+        await supabase.from("creator_follows").insert({ follower_id: user.id, creator_id: product.creatorId });
+        setFollowing(true);
+      }
     } else {
-      await supabase.from("follows").insert({ follower_id: user.id, merchant_id: product.merchantId });
-      setFollowing(true);
+      if (following) {
+        await supabase.from("follows").delete().eq("follower_id", user.id).eq("merchant_id", product.merchantId);
+        setFollowing(false);
+      } else {
+        await supabase.from("follows").insert({ follower_id: user.id, merchant_id: product.merchantId });
+        setFollowing(true);
+      }
     }
   }
 
@@ -276,14 +288,14 @@ function FeedCard({
           </div>
         )}
 
-        {/* Right rail: merchant avatar + follow, like, save */}
+        {/* Right rail: creator/merchant avatar + follow, like, comment, save */}
         <div className="absolute bottom-3 right-3 flex flex-col items-center gap-4">
           <div className="relative">
             <Link
-              href={`/store/${product.merchantId}`}
+              href={product.creatorId ? `/creator/${product.creatorId}` : `/store/${product.merchantId}`}
               className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-ink-500 font-display text-sm text-white"
             >
-              {product.storeName.charAt(0).toUpperCase()}
+              {(product.creatorName ?? product.storeName).charAt(0).toUpperCase()}
             </Link>
             <button
               onClick={toggleFollow}

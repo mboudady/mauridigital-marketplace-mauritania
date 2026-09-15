@@ -450,6 +450,42 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_follows: {
+        Row: {
+          created_at: string
+          creator_id: string
+          follower_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          follower_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          follower_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_follows_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       creator_post_hashtags: {
         Row: {
           hashtag_id: string
@@ -2008,6 +2044,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_complete_payout: {
+        Args: { p_payout_id: string }
+        Returns: undefined
+      }
       admin_resolve_report: {
         Args: {
           p_report_id: string
@@ -2068,6 +2108,10 @@ export type Database = {
         Returns: undefined
       }
       my_merchant_id: { Args: never; Returns: string }
+      request_payout: {
+        Args: { p_method: string; p_phone: string }
+        Returns: string
+      }
       request_refund: {
         Args: { p_order_id: string; p_reason: string }
         Returns: string

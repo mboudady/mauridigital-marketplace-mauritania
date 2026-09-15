@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ReportButton } from "@/components/ReportButton";
@@ -11,6 +12,43 @@ import { ViewTracker } from "@/components/ViewTracker";
 import { AffiliateRefTracker } from "@/components/AffiliateRefTracker";
 import { AffiliateAction } from "@/components/AffiliateAction";
 import { formatMRU } from "@/lib/format";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: product } = await supabase
+    .from("products")
+    .select("name, description, price_mru, product_media(url, is_hero, type)")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!product) return { title: "Product not found — Souq" };
+
+  const media = (product.product_media ?? []) as Array<{ url: string; is_hero: boolean | null; type: string }>;
+  const hero = media.find((m) => m.is_hero && m.type === "image") ?? media.find((m) => m.type === "image");
+  const description = product.description?.slice(0, 155) ?? `${formatMRU(product.price_mru)} on Souq`;
+
+  return {
+    title: `${product.name} — Souq`,
+    description,
+    openGraph: {
+      title: product.name,
+      description,
+      images: hero ? [hero.url] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
+      images: hero ? [hero.url] : [],
+    },
+  };
+}
 
 export default async function ProductPage({
   params,
@@ -56,8 +94,35 @@ export default async function ProductPage({
     verification_status: string | null;
   } | null;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description ?? undefined,
+    image: images,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "MRU",
+      price: product.price_mru,
+      availability: "https://schema.org/InStock",
+    },
+    ...(product.rating_count && product.rating_count > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: product.rating,
+            reviewCount: product.rating_count,
+          },
+        }
+      : {}),
+  };
+
   return (
     <main className="min-h-screen bg-ink-950 text-ink-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ViewTracker productId={product.id} merchantId={product.merchant_id} />
       <Suspense fallback={null}>
         <AffiliateRefTracker productId={product.id} />

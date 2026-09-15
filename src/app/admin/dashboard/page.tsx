@@ -24,6 +24,14 @@ async function sendBroadcast(formData: FormData) {
   revalidatePath("/admin/dashboard");
 }
 
+async function completePayout(formData: FormData) {
+  "use server";
+  const payoutId = formData.get("payoutId") as string;
+  const supabase = await createClient();
+  await supabase.rpc("admin_complete_payout", { p_payout_id: payoutId });
+  revalidatePath("/admin/dashboard");
+}
+
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
   const {
@@ -49,13 +57,18 @@ export default async function AdminDashboardPage() {
     );
   }
 
-  const [{ data: merchants }, { count: userCount }, { count: orderCount }] = await Promise.all([
+  const [{ data: merchants }, { count: userCount }, { count: orderCount }, { data: pendingPayouts }] = await Promise.all([
     supabase
       .from("merchants")
       .select("id, store_name, category, verification_status, total_gmv, created_at")
       .order("created_at", { ascending: false }),
     supabase.from("users").select("*", { count: "exact", head: true }),
     supabase.from("orders").select("*", { count: "exact", head: true }),
+    supabase
+      .from("payouts")
+      .select("id, amount_mru, payout_method, payout_destination, created_at, users(email)")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true }),
   ]);
 
   const totalGmv = (merchants ?? []).reduce((s, m) => s + (m.total_gmv ?? 0), 0);
@@ -111,6 +124,34 @@ export default async function AdminDashboardPage() {
             </button>
           </form>
         </section>
+
+        {pendingPayouts && pendingPayouts.length > 0 && (
+          <section className="mt-10 rounded border border-ink-700 bg-ink-850 p-5">
+            <h2 className="text-sm font-medium">Pending payouts</h2>
+            <ul className="mt-4 divide-y divide-ink-800">
+              {pendingPayouts.map((p: any) => (
+                <li key={p.id} className="flex items-center justify-between py-3 text-sm">
+                  <div>
+                    <p>{p.users?.email ?? "Unknown"}</p>
+                    <p className="text-xs text-ink-400">
+                      {formatMRU(p.amount_mru)} · {p.payout_method} ·{" "}
+                      {(p.payout_destination as { phone?: string })?.phone}
+                    </p>
+                  </div>
+                  <form action={completePayout}>
+                    <input type="hidden" name="payoutId" value={p.id} />
+                    <button
+                      type="submit"
+                      className="rounded border border-ink-600 px-3 py-1 text-xs hover:bg-ink-800"
+                    >
+                      Mark paid
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section className="mt-10">
           <h2 className="text-sm font-medium">Merchants</h2>

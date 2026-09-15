@@ -134,7 +134,22 @@ export default function MerchantAffiliatesPage() {
           Let creators earn a commission for driving sales to your products.
         </p>
 
-        <div className="mt-6 flex items-center justify-between rounded border border-ink-700 bg-ink-850 p-4">
+        <dl className="mt-4 grid grid-cols-3 gap-4">
+          <div className="rounded-lg border border-ink-700 bg-ink-850 p-4">
+            <dt className="text-xs text-ink-400">Status</dt>
+            <dd className="mt-1.5 font-display text-lg">{program?.enabled ? "Open" : "Closed"}</dd>
+          </div>
+          <div className="rounded-lg border border-ink-700 bg-ink-850 p-4">
+            <dt className="text-xs text-ink-400">Pending</dt>
+            <dd className="mt-1.5 font-display text-2xl">{pending.length}</dd>
+          </div>
+          <div className="rounded-lg border border-ink-700 bg-ink-850 p-4">
+            <dt className="text-xs text-ink-400">Active affiliates</dt>
+            <dd className="mt-1.5 font-display text-2xl">{approved.length}</dd>
+          </div>
+        </dl>
+
+        <div className="mt-4 flex items-center justify-between rounded-lg border border-ink-700 bg-ink-850 p-4">
           <div>
             <p className="text-sm font-medium">
               {program?.enabled ? "Program is open" : "Program is closed"}

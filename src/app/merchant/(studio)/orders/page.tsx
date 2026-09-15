@@ -37,12 +37,29 @@ export default async function MerchantOrdersPage() {
     .eq("merchant_id", merchant.id)
     .order("created_at", { ascending: false });
 
+  const newCount = orders?.filter((o) => o.status === "pending").length ?? 0;
+  const inProgressCount = orders?.filter((o) => ["confirmed", "shipped"].includes(o.status)).length ?? 0;
+  const completedCount = orders?.filter((o) => o.status === "completed").length ?? 0;
+
   return (
     <div>
+      <dl className="grid grid-cols-3 gap-4">
+        {[
+          { label: "New", value: newCount },
+          { label: "In progress", value: inProgressCount },
+          { label: "Completed", value: completedCount },
+        ].map((s) => (
+          <div key={s.label} className="rounded-lg border border-ink-700 bg-ink-850 p-4">
+            <dt className="text-xs text-ink-400">{s.label}</dt>
+            <dd className="mt-1.5 font-display text-2xl">{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+
       {!orders?.length ? (
         <p className="mt-10 text-center text-ink-500">No orders yet.</p>
       ) : (
-        <ul className="divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
+        <ul className="mt-6 divide-y divide-ink-800 rounded-lg border border-ink-700 bg-ink-850">
           {orders.map((o) => (
             <li key={o.id}>
               <Link
