@@ -66,7 +66,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-500 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
               />
             </div>
 
@@ -77,7 +77,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
+              className="w-full rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
             >
               {status === "sending" ? "Sending link…" : "Send sign-in link"}
             </button>

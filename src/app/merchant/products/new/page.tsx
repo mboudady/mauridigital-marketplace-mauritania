@@ -225,13 +225,13 @@ export default function NewProductPage() {
             onChange={(e) => setName(e.target.value)}
             rows={2}
             placeholder="Write a caption... (this is your product name)"
-            className="w-full resize-none border-0 border-b border-ink-700 bg-transparent pb-2 text-base placeholder:text-ink-500 focus:border-spark-500 focus:outline-none"
+            className="w-full resize-none border-0 border-b border-ink-700 bg-transparent pb-2 text-base placeholder:text-ink-500 focus:border-ink-100 focus:outline-none"
           />
 
           <div>
             <div className="flex flex-wrap gap-2">
               {hashtags.map((tag) => (
-                <span key={tag} className="flex items-center gap-1 rounded-full bg-ink-800 px-3 py-1 text-xs text-spark-400">
+                <span key={tag} className="flex items-center gap-1 rounded-full bg-ink-800 px-3 py-1 text-xs text-ink-50">
                   #{tag}
                   <button type="button" onClick={() => removeHashtag(tag)} className="text-ink-400">
                     ×
@@ -250,7 +250,7 @@ export default function NewProductPage() {
               }}
               onBlur={addHashtag}
               placeholder="Add hashtags — #handbag #summer…"
-              className="mt-2 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm placeholder:text-ink-500 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-2 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm placeholder:text-ink-500 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -265,7 +265,7 @@ export default function NewProductPage() {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="3000"
-                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
               />
             </div>
             <div>
@@ -277,7 +277,7 @@ export default function NewProductPage() {
                 required
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
-                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+                className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ export default function NewProductPage() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -305,7 +305,7 @@ export default function NewProductPage() {
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-sm focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -314,7 +314,7 @@ export default function NewProductPage() {
           <button
             type="submit"
             disabled={status === "saving"}
-            className="w-full rounded-full bg-spark-500 px-4 py-3 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
+            className="w-full rounded-full bg-ink-50 px-4 py-3 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
           >
             {status === "saving" ? "Posting…" : "Post"}
           </button>

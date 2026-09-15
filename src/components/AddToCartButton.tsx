@@ -59,7 +59,7 @@ export function AddToCartButton({
         type="button"
         onClick={handleAdd}
         disabled={status === "adding"}
-        className="flex-1 rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
+        className="flex-1 rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
       >
         {status === "added"
           ? "Added ✓"

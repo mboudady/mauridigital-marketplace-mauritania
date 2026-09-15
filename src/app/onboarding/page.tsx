@@ -64,7 +64,7 @@ export default function OnboardingPage() {
     <main className="min-h-screen bg-ink-950 px-6 py-16 text-ink-50">
       <div className="mx-auto max-w-md">
         <h1 className="font-display text-3xl">Set up your store</h1>
-        <p className="mt-2 text-sm text-spark-400">
+        <p className="mt-2 text-sm text-ink-50">
           Free to open. You only pay a 7% commission when you make a sale.
         </p>
 
@@ -79,7 +79,7 @@ export default function OnboardingPage() {
               value={storeName}
               onChange={(e) => setStoreName(e.target.value)}
               placeholder="e.g. Boutique Amal"
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
@@ -112,7 +112,7 @@ export default function OnboardingPage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="What do you sell, and what makes your store worth following?"
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={status === "saving"}
-            className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
+            className="w-full rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
           >
             {status === "saving" ? "Creating store…" : "Create store"}
           </button>

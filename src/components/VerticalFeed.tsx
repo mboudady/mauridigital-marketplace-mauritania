@@ -36,7 +36,7 @@ function RailButton({
       onClick={onClick}
       className="flex flex-col items-center gap-1 text-ink-50 drop-shadow-lg"
     >
-      <span className={active ? "text-spark-400" : ""}>{children}</span>
+      <span className={active ? "text-ink-50" : ""}>{children}</span>
       {label && <span className="text-[10px]">{label}</span>}
     </button>
   );
@@ -200,7 +200,7 @@ function FeedCard({
             <button
               onClick={toggleFollow}
               className={`absolute -bottom-2 left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full text-[11px] text-ink-50 ${
-                following ? "bg-ink-600" : "bg-spark-500"
+                following ? "bg-ink-600" : "bg-ink-50"
               }`}
               aria-label={following ? "Unfollow" : "Follow"}
             >
@@ -235,9 +235,25 @@ function FeedCard({
         <button
           onClick={quickAdd}
           disabled={adding}
-          className="shrink-0 rounded-full bg-spark-500 px-4 py-2 text-xs font-medium text-ink-50 disabled:opacity-70"
+          aria-label="Add to cart"
+          className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-600 text-ink-50 disabled:opacity-70"
         >
-          {adding ? "Added" : "Add to cart"}
+          {adding ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M4 12l5 5L20 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M4 6h2l1.5 10.5a1.5 1.5 0 001.5 1.3h8a1.5 1.5 0 001.5-1.3L20 8H6.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="10" cy="21" r="1.2" fill="currentColor" />
+                <circle cx="17" cy="21" r="1.2" fill="currentColor" />
+              </svg>
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-ink-50 text-[10px] leading-none text-ink-950">
+                +
+              </span>
+            </>
+          )}
         </button>
       </div>
     </div>

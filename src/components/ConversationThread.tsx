@@ -120,7 +120,7 @@ export function ConversationThread({
             <div
               className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${
                 m.sender_id === myUserId
-                  ? "bg-spark-500 text-ink-50"
+                  ? "bg-ink-50 text-ink-950"
                   : "bg-ink-850 text-ink-100"
               }`}
             >
@@ -137,12 +137,12 @@ export function ConversationThread({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
           placeholder="Message…"
-          className="flex-1 rounded-full border border-ink-600 bg-ink-850 px-4 py-2 text-sm text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none"
+          className="flex-1 rounded-full border border-ink-600 bg-ink-850 px-4 py-2 text-sm text-ink-50 placeholder:text-ink-500 focus:border-ink-100 focus:outline-none"
         />
         <button
           onClick={send}
           disabled={sending || !draft.trim()}
-          className="rounded-full bg-spark-500 px-4 py-2 text-sm text-ink-50 disabled:opacity-60"
+          className="rounded-full bg-ink-50 px-4 py-2 text-sm text-ink-950 disabled:opacity-60"
         >
           Send
         </button>

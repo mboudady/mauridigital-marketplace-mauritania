@@ -174,7 +174,7 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="mt-6 block w-full rounded bg-spark-500 px-4 py-3 text-center text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400"
+              className="mt-6 block w-full rounded bg-ink-50 px-4 py-3 text-center text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200"
             >
               Proceed to checkout
             </Link>

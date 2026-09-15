@@ -86,7 +86,7 @@ export function ReviewForm({
       <button
         onClick={submit}
         disabled={status === "saving"}
-        className="mt-3 rounded bg-spark-500 px-4 py-1.5 text-sm text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+        className="mt-3 rounded bg-ink-50 px-4 py-1.5 text-sm text-ink-950 hover:bg-ink-200 disabled:opacity-60"
       >
         {status === "saving" ? "Submitting…" : "Submit review"}
       </button>

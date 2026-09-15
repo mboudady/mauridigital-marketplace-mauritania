@@ -104,12 +104,10 @@ export default async function MerchantAnalyticsPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="font-display text-3xl">Analytics</h1>
-        <p className="mt-1 text-sm text-ink-500">Last 30 days</p>
+    <div>
+      <p className="text-sm text-ink-500">Last 30 days</p>
 
-        <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "GMV (30d)", value: formatMRU(gmv30) },
             { label: "Orders (30d)", value: orders30.length },
@@ -158,7 +156,7 @@ export default async function MerchantAnalyticsPage() {
                   </div>
                   <div className="mt-1 h-2 w-full rounded-full bg-ink-800">
                     <div
-                      className="h-2 rounded-full bg-spark-500"
+                      className="h-2 rounded-full bg-ink-50"
                       style={{ width: `${Math.max(2, pct)}%` }}
                     />
                   </div>
@@ -187,7 +185,6 @@ export default async function MerchantAnalyticsPage() {
             ))}
           </ul>
         </section>
-      </div>
-    </main>
+    </div>
   );
 }

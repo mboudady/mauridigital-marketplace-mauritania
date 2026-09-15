@@ -40,7 +40,7 @@ export default async function FeedPage({
         <FeedTabs active="following" />
         <div className="flex flex-1 flex-col items-center justify-center px-6 text-center text-ink-300">
           <p className="text-sm">Log in to see products from merchants you follow.</p>
-          <Link href="/login" className="mt-3 text-sm text-spark-400 underline">
+          <Link href="/login" className="mt-3 text-sm text-ink-50 underline">
             Log in
           </Link>
         </div>

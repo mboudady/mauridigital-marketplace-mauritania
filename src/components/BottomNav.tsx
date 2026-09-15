@@ -134,7 +134,7 @@ export function BottomNav() {
         <button
           onClick={handleCreate}
           aria-label={isMerchant ? "Add a product" : "Open a store"}
-          className="flex h-9 w-12 items-center justify-center rounded-lg bg-spark-500 text-ink-50"
+          className="flex h-9 w-12 items-center justify-center rounded-lg bg-ink-50 text-ink-950"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
@@ -155,7 +155,7 @@ export function BottomNav() {
               <Icon active={active} />
               <span className="text-[10px]">{label}</span>
               {badge > 0 && (
-                <span className="absolute -right-1 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-spark-500 px-1 text-[9px] text-ink-50">
+                <span className="absolute -right-1 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ink-50 px-1 text-[9px] text-ink-950">
                   {badge}
                 </span>
               )}

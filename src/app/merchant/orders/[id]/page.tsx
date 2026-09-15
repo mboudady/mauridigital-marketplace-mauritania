@@ -137,7 +137,7 @@ export default function MerchantOrderDetailPage({
       <div className="mx-auto max-w-xl">
         <Link
           href="/merchant/orders"
-          className="text-xs text-ink-500 hover:text-spark-400"
+          className="text-xs text-ink-500 hover:text-ink-50"
         >
           ← All orders
         </Link>
@@ -163,7 +163,7 @@ export default function MerchantOrderDetailPage({
               <button
                 onClick={() => respondToRefund(true)}
                 disabled={busy}
-                className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+                className="rounded bg-ink-50 px-3 py-1.5 text-xs text-ink-950 hover:bg-ink-200 disabled:opacity-60"
               >
                 Approve refund
               </button>
@@ -218,7 +218,7 @@ export default function MerchantOrderDetailPage({
             <button
               onClick={() => advanceStatus(action.next)}
               disabled={busy}
-              className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+              className="w-full rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 hover:bg-ink-200 disabled:opacity-60"
             >
               {busy ? "Updating…" : action.label}
             </button>

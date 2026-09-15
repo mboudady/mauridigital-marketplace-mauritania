@@ -148,7 +148,7 @@ export default function ModerationPage() {
                   <button
                     onClick={() => resolve(r.id)}
                     disabled={busyId === r.id}
-                    className="rounded bg-spark-500 px-3 py-1.5 text-sm text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+                    className="rounded bg-ink-50 px-3 py-1.5 text-sm text-ink-950 hover:bg-ink-200 disabled:opacity-60"
                   >
                     {busyId === r.id ? "Applying…" : "Apply"}
                   </button>

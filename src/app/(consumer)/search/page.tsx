@@ -72,7 +72,7 @@ export default async function SearchPage({
             defaultValue={q ?? ""}
             placeholder="Search products…"
             autoFocus
-            className="w-full rounded border border-ink-600 bg-ink-850 px-4 py-2.5 text-ink-50 placeholder:text-ink-500 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+            className="w-full rounded border border-ink-600 bg-ink-850 px-4 py-2.5 text-ink-50 placeholder:text-ink-500 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
           />
         </form>
 

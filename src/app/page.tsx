@@ -12,7 +12,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/login?role=merchant"
-              className="rounded bg-spark-500 px-4 py-2 text-ink-50 transition-colors hover:bg-spark-400"
+              className="rounded bg-ink-50 px-4 py-2 text-ink-950 transition-colors hover:bg-ink-200"
             >
               Sell on Souq
             </Link>

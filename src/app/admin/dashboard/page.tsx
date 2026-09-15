@@ -49,7 +49,7 @@ export default async function AdminDashboardPage() {
         <h1 className="font-display text-3xl">Merchants</h1>
         <p className="mt-1 text-sm text-ink-500">
           {merchants?.length ?? 0} total ·{" "}
-          <a href="/admin/moderation" className="text-spark-400 underline">
+          <a href="/admin/moderation" className="text-ink-50 underline">
             Moderation queue
           </a>
         </p>
@@ -73,7 +73,7 @@ export default async function AdminDashboardPage() {
                   <span
                     className={
                       m.verification_status === "verified"
-                        ? "text-spark-400"
+                        ? "text-ink-50"
                         : "text-ink-500"
                     }
                   >
@@ -87,7 +87,7 @@ export default async function AdminDashboardPage() {
                       <input type="hidden" name="merchantId" value={m.id} />
                       <button
                         type="submit"
-                        className="rounded border border-ink-600 px-3 py-1 text-xs text-spark-400 hover:bg-ink-800"
+                        className="rounded border border-ink-600 px-3 py-1 text-xs text-ink-50 hover:bg-ink-800"
                       >
                         Verify
                       </button>

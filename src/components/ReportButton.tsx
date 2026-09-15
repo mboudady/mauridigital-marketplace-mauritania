@@ -82,7 +82,7 @@ export function ReportButton({
         <button
           onClick={submit}
           disabled={status === "sending"}
-          className="rounded bg-spark-500 px-3 py-1 text-ink-50 disabled:opacity-60"
+          className="rounded bg-ink-50 px-3 py-1 text-ink-950 disabled:opacity-60"
         >
           Submit report
         </button>

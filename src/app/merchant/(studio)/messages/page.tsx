@@ -50,34 +50,30 @@ export default function MerchantMessagesPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="font-display text-3xl">Messages</h1>
+    <div>
+      {!loading && conversations.length === 0 && (
+        <p className="mt-10 text-center text-ink-500">
+          No customer messages yet.
+        </p>
+      )}
 
-        {!loading && conversations.length === 0 && (
-          <p className="mt-10 text-center text-ink-500">
-            No customer messages yet.
-          </p>
-        )}
-
-        <ul className="mt-6 divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
-          {conversations.map((c) => (
-            <li key={c.id}>
-              <Link
-                href={`/merchant/messages/${c.id}`}
-                className="flex items-center justify-between p-4 hover:bg-ink-950"
-              >
-                <span className="text-sm">Customer</span>
-                {c.last_message_at && (
-                  <span className="text-xs text-ink-500">
-                    {new Date(c.last_message_at).toLocaleDateString()}
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </main>
+      <ul className="divide-y divide-ink-800 rounded border border-ink-700 bg-ink-850">
+        {conversations.map((c) => (
+          <li key={c.id}>
+            <Link
+              href={`/merchant/messages/${c.id}`}
+              className="flex items-center justify-between p-4 hover:bg-ink-950"
+            >
+              <span className="text-sm">Customer</span>
+              {c.last_message_at && (
+                <span className="text-xs text-ink-500">
+                  {new Date(c.last_message_at).toLocaleDateString()}
+                </span>
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

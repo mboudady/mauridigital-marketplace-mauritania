@@ -57,7 +57,7 @@ export default async function ProfilePage() {
     <main className="min-h-screen bg-ink-950 text-ink-50">
       <div className="safe-top mx-auto max-w-lg px-6 pt-8">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-spark-500 font-display text-2xl">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink-50 font-display text-2xl">
             {(profile?.display_name ?? user.email ?? "?").charAt(0).toUpperCase()}
           </div>
           <div>
@@ -75,7 +75,7 @@ export default async function ProfilePage() {
           >
             <p className="text-xs uppercase tracking-wide text-ink-400">Your store</p>
             <p className="mt-1 font-display text-lg">{merchant.store_name}</p>
-            <p className="mt-1 text-xs text-spark-400">Open dashboard →</p>
+            <p className="mt-1 text-xs text-ink-50">Open dashboard →</p>
           </Link>
         ) : (
           <Link

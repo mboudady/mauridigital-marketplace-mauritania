@@ -61,7 +61,7 @@ export function OrderActions({
         <button
           onClick={confirmDelivery}
           disabled={busy}
-          className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+          className="w-full rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 hover:bg-ink-200 disabled:opacity-60"
         >
           {busy ? "Confirming…" : "Confirm I received this order"}
         </button>
@@ -92,7 +92,7 @@ export function OrderActions({
             <button
               onClick={submitRefundRequest}
               disabled={busy || reason.trim().length === 0}
-              className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 hover:bg-spark-400 disabled:opacity-60"
+              className="rounded bg-ink-50 px-3 py-1.5 text-xs text-ink-950 hover:bg-ink-200 disabled:opacity-60"
             >
               Submit request
             </button>

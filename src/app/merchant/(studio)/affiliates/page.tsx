@@ -129,10 +129,8 @@ export default function MerchantAffiliatesPage() {
   const approved = enrollments.filter((e) => e.status === "approved");
 
   return (
-    <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50 sm:px-10">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="font-display text-3xl">Affiliate program</h1>
-        <p className="mt-1 text-sm text-ink-500">
+    <div>
+      <p className="text-sm text-ink-500">
           Let creators earn a commission for driving sales to your products.
         </p>
 
@@ -151,7 +149,7 @@ export default function MerchantAffiliatesPage() {
             className={`rounded px-4 py-1.5 text-sm font-medium disabled:opacity-60 ${
               program?.enabled
                 ? "border border-ink-600 text-ink-300"
-                : "bg-spark-500 text-ink-50"
+                : "bg-ink-50 text-ink-950"
             }`}
           >
             {program?.enabled ? "Close program" : "Open program"}
@@ -173,7 +171,7 @@ export default function MerchantAffiliatesPage() {
           <button
             onClick={saveSettings}
             disabled={saving}
-            className="rounded bg-spark-500 px-4 py-1.5 text-sm text-ink-50 disabled:opacity-60"
+            className="rounded bg-ink-50 px-4 py-1.5 text-sm text-ink-950 disabled:opacity-60"
           >
             Save
           </button>
@@ -201,7 +199,7 @@ export default function MerchantAffiliatesPage() {
                     <button
                       onClick={() => respond(e.id, true)}
                       disabled={busyId === e.id}
-                      className="rounded bg-spark-500 px-3 py-1.5 text-xs text-ink-50 disabled:opacity-60"
+                      className="rounded bg-ink-50 px-3 py-1.5 text-xs text-ink-950 disabled:opacity-60"
                     >
                       Approve
                     </button>
@@ -238,7 +236,6 @@ export default function MerchantAffiliatesPage() {
             </ul>
           )}
         </section>
-      </div>
-    </main>
+    </div>
   );
 }

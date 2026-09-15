@@ -133,7 +133,7 @@ export default function AffiliateDashboardPage() {
                   {e.product_id && (
                     <button
                       onClick={() => copyLink(e.id, e.product_id)}
-                      className="mt-2 rounded bg-spark-500 px-3 py-1 text-xs text-ink-50"
+                      className="mt-2 rounded bg-ink-50 px-3 py-1 text-xs text-ink-950"
                     >
                       {copiedId === e.id ? "Copied" : "Copy link"}
                     </button>

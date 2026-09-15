@@ -35,7 +35,7 @@ function ApprovedLink({
             navigator.clipboard.writeText(link);
             onCopy();
           }}
-          className="shrink-0 rounded bg-spark-500 px-2 py-1 text-ink-50"
+          className="shrink-0 rounded bg-ink-50 px-2 py-1 text-ink-950"
         >
           {copied ? "Copied" : "Copy"}
         </button>

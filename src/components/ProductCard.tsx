@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <Link
       href={`/product/${product.id}`}
-      className="group block overflow-hidden rounded border border-ink-700 bg-ink-850 transition-colors hover:border-spark-500"
+      className="group block overflow-hidden rounded border border-ink-700 bg-ink-850 transition-colors hover:border-ink-400"
     >
       <div className="relative aspect-square w-full bg-ink-800">
         {product.heroImageUrl ? (

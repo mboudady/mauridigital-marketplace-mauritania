@@ -69,7 +69,7 @@ export default async function OrderDetailPage({
               <div key={step} className="flex flex-1 items-center">
                 <div
                   className={`h-1.5 flex-1 rounded ${
-                    i <= currentStepIndex ? "bg-spark-500" : "bg-ink-800"
+                    i <= currentStepIndex ? "bg-ink-50" : "bg-ink-800"
                   }`}
                 />
               </div>

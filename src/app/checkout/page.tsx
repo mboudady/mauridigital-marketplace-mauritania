@@ -91,7 +91,7 @@ export default function CheckoutPage() {
     <main className="min-h-screen bg-ink-950 px-6 py-12 text-ink-50">
       <div className="mx-auto max-w-md">
         <h1 className="font-display text-3xl">Checkout</h1>
-        <p className="mt-2 text-sm text-spark-400">
+        <p className="mt-2 text-sm text-ink-50">
           Pay cash when your order is delivered.
         </p>
 
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Street, neighborhood, landmark"
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -120,7 +120,7 @@ export default function CheckoutPage() {
               required
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function CheckoutPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+222 …"
-              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-spark-500 focus:outline-none focus:ring-1 focus:ring-spark-500"
+              className="mt-1 w-full rounded border border-ink-600 bg-ink-850 px-3 py-2 text-ink-50 placeholder:text-ink-400 focus:border-ink-100 focus:outline-none focus:ring-1 focus:ring-ink-100"
             />
           </div>
 
@@ -159,7 +159,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={status === "placing" || subtotal === null}
-            className="w-full rounded bg-spark-500 px-4 py-2.5 text-sm font-medium text-ink-50 transition-colors hover:bg-spark-400 disabled:opacity-60"
+            className="w-full rounded bg-ink-50 px-4 py-2.5 text-sm font-medium text-ink-950 transition-colors hover:bg-ink-200 disabled:opacity-60"
           >
             {status === "placing" ? "Placing order…" : "Place order"}
           </button>
